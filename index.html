@@ -597,6 +597,74 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .trend-badge.stable{background:var(--amber-dim);border:1px solid rgba(251,191,36,.25);color:var(--amber);}
 .trend-badge.neutral{background:var(--surface);border:1px solid var(--border2);color:var(--text);}
 @media(max-width:560px){.trend-row{grid-template-columns:46px 1fr 1fr 18px;}.trend-row .trend-cell:nth-child(4){display:none;}.trend-row .trend-cell:nth-child(5){display:none;}}
+
+/* ── PAGE TRANSITIONS ── */
+.page{transition:opacity .22s ease, transform .22s cubic-bezier(.16,1,.3,1);}
+.page.page-exit{opacity:0;transform:translateY(8px);pointer-events:none;}
+.page.page-enter{animation:pageEnter .28s cubic-bezier(.16,1,.3,1) both;}
+@keyframes pageEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── AIRPORT DASHBOARD ── */
+.ap-dashboard{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+@media(max-width:640px){.ap-dashboard{grid-template-columns:1fr;}}
+
+.ap-hero-card{grid-column:1/-1;background:var(--panel-bg);border:1px solid var(--panel-edge);border-radius:14px;overflow:hidden;position:relative;}
+.ap-hero-card::before{content:'';position:absolute;right:-80px;top:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.07),transparent 70%);pointer-events:none;}
+.ap-hero-inner{padding:22px 24px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.ap-hero-left{}
+.ap-hero-icao{font-family:'JetBrains Mono',monospace;font-size:42px;font-weight:700;color:var(--sky);line-height:1;letter-spacing:-.02em;margin-bottom:4px;}
+.ap-hero-name{font-size:18px;font-weight:700;color:var(--text3);letter-spacing:-.02em;margin-bottom:3px;}
+.ap-hero-city{font-size:13px;color:var(--text);margin-bottom:12px;}
+.ap-hero-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.ap-hero-tag{font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:100px;background:var(--surface);border:1px solid var(--border2);color:var(--text);}
+.ap-hero-tag.elev{color:var(--amber);border-color:rgba(251,191,36,.25);background:var(--amber-dim);}
+.ap-hero-tag.iata{color:var(--sky);border-color:rgba(56,189,248,.25);background:var(--sky-dim);}
+.ap-hero-tag.type{color:var(--green);border-color:rgba(52,211,153,.25);background:var(--green-dim);}
+.ap-hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+.ap-fav-large{font-size:22px;cursor:pointer;background:none;border:1px solid var(--border2);border-radius:9px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:all .18s;color:var(--text);}
+.ap-fav-large:hover{border-color:var(--amber);transform:scale(1.1);}
+.ap-fav-large.saved{color:var(--amber);border-color:rgba(251,191,36,.35);background:var(--amber-dim);}
+.ap-coords{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.45;text-align:right;line-height:1.6;}
+
+/* METAR live card */
+.ap-metar-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.ap-metar-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ap-metar-title{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);opacity:.8;}
+.ap-metar-live{display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--green);}
+.ap-metar-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.ap-metar-body{padding:14px 16px;}
+.ap-metar-raw{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.5;line-height:1.6;margin-bottom:12px;word-break:break-all;}
+.ap-wx-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.ap-wx-item{background:var(--inset);border:1px solid var(--border);border-radius:8px;padding:9px 11px;text-align:center;}
+.ap-wx-label{font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:.15em;text-transform:uppercase;color:var(--text);opacity:.45;margin-bottom:3px;}
+.ap-wx-val{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:500;color:var(--sky);line-height:1;}
+.ap-wx-unit{font-family:'JetBrains Mono',monospace;font-size:6.5px;color:var(--text);opacity:.35;margin-top:2px;}
+.ap-fc-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding:8px 11px;background:var(--inset);border-radius:8px;}
+
+/* Runways card */
+.ap-rwy-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.ap-rwy-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ap-rwy-title{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);opacity:.8;}
+.ap-rwy-body{padding:14px 16px;display:flex;flex-direction:column;gap:8px;}
+.ap-rwy-item{background:var(--inset);border:1px solid var(--border);border-radius:9px;padding:11px 14px;}
+.ap-rwy-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.ap-rwy-id-big{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:600;color:var(--text3);}
+.ap-rwy-len{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.5;}
+.ap-rwy-hdgs{display:flex;gap:6px;}
+.ap-rwy-hdg{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 8px;background:var(--surface);border:1px solid var(--border2);border-radius:100px;color:var(--text2);}
+.ap-rwy-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px;}
+.ap-rwy-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--sky),var(--blue));}
+.ap-rwy-rec-badge{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:100px;}
+.ap-rwy-rec-badge.best{background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:var(--green);}
+.ap-rwy-rec-badge.alt{background:var(--amber-dim);border:1px solid rgba(251,191,36,.25);color:var(--amber);}
+.ap-rwy-rec-badge.avoid{background:var(--red-dim);border:1px solid rgba(248,113,113,.25);color:var(--red);}
+
+/* Trend card — full width */
+.ap-trend-card{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.ap-trend-header{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.ap-trend-title{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);opacity:.8;}
+.ap-trend-body{padding:14px 16px;}
 </style>
 </head>
 <body>
@@ -1161,58 +1229,99 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="page" id="page-airport">
 <div class="app">
   <div class="page-hero-wide">
-    <div class="phw-eyebrow">OurAirports Database</div>
+    <div class="phw-eyebrow">OurAirports · Live Weather</div>
     <h1 class="phw-title">Airport <span>Overview</span></h1>
-    <p class="phw-sub">Look up any airport worldwide by ICAO code. Get runway configurations, surface types, headings, elevation, and an instant active runway recommendation based on your current wind.</p>
+    <p class="phw-sub">Full airport dashboard — live METAR, runway analysis, wind recommendation, and 3-hour weather trend. Search any of 85,000+ airports worldwide.</p>
     <div class="phw-tags">
       <span class="phw-tag sky">85,000+ Airports</span>
-      <span class="phw-tag sky">Runway Data</span>
-      <span class="phw-tag sky">Wind Recommendation</span>
+      <span class="phw-tag sky">Live METAR</span>
+      <span class="phw-tag sky">Runway Analysis</span>
+      <span class="phw-tag sky">3h Trend</span>
     </div>
   </div>
 
-  <div class="ap-stats">
-    <div class="ap-stat"><div class="ap-stat-num">85k+</div><div class="ap-stat-label">Airports in database</div></div>
-    <div class="ap-stat"><div class="ap-stat-num">47k+</div><div class="ap-stat-label">Runway records</div></div>
-    <div class="ap-stat"><div class="ap-stat-num">100%</div><div class="ap-stat-label">Free — OurAirports.com</div></div>
-  </div>
-
   <!-- Favourites strip -->
-  <div class="fav-strip" id="ap-fav-strip" style="border-radius:13px;border:1px solid var(--border);margin-bottom:10px;">
+  <div class="fav-strip" id="ap-fav-strip" style="border-radius:13px;border:1px solid var(--border);margin-bottom:12px;">
     <span class="fav-strip-label">⭐ Favourites</span>
     <span class="fav-empty" id="ap-fav-empty">No favourites saved yet</span>
   </div>
 
-  <div class="card" style="margin-bottom:14px;"><div class="card-body" style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
-    <div style="flex:1;min-width:100px;"><span class="sec-label">ICAO Code</span><input class="field-input" id="ap-icao" type="text" placeholder="LRCL" maxlength="4" oninput="this.value=this.value.toUpperCase()"></div>
-    <div style="flex:1;min-width:85px;"><span class="sec-label">Wind Dir (°)</span><input class="field-input" id="ap-wdir" type="number" placeholder="270" min="0" max="360"></div>
-    <div style="flex:1;min-width:75px;"><span class="sec-label">Wind Speed (kt)</span><input class="field-input" id="ap-wspd" type="number" placeholder="10" min="0"></div>
-    <button class="btn-primary" onclick="lookupAirport()">Look Up</button>
+  <!-- Search bar -->
+  <div class="card" style="margin-bottom:14px;"><div class="card-body">
+    <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;">
+      <div style="flex:0 0 auto;">
+        <span class="sec-label">ICAO Code</span>
+        <input class="field-input" id="ap-icao" type="text" placeholder="LRCL" maxlength="4"
+          style="width:100px;font-size:16px;text-align:center;letter-spacing:.1em;font-weight:700;"
+          oninput="this.value=this.value.toUpperCase()"
+          onkeydown="if(event.key==='Enter')lookupAirport()">
+      </div>
+      <div style="flex:1;min-width:80px;"><span class="sec-label">Wind Dir (°)</span><input class="field-input" id="ap-wdir" type="number" placeholder="270" min="0" max="360"></div>
+      <div style="flex:1;min-width:70px;"><span class="sec-label">Wind Speed (kt)</span><input class="field-input" id="ap-wspd" type="number" placeholder="10" min="0"></div>
+      <button class="btn-primary" style="padding:9px 22px;font-size:12px;" onclick="lookupAirport()">Look Up</button>
+    </div>
+    <div style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.38;line-height:1.6;">
+      💡 Requires airports.csv + runways.csv in the same folder. Wind fields are optional — add them for runway recommendation.
+    </div>
   </div></div>
-  <div class="tool-tip" style="margin-bottom:14px;">💡 Requires <code style="font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--inset);padding:1px 5px;border-radius:4px;">airports.csv</code> and <code style="font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--inset);padding:1px 5px;border-radius:4px;">runways.csv</code> in the same folder as this HTML file. Open via local server (<code style="font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--inset);padding:1px 5px;border-radius:4px;">python3 -m http.server</code>) for CSV loading to work.</div>
+
   <div class="loading-bar" id="ap-loading"><div class="spinner"></div><div class="loading-text">Loading airport data<span class="loading-dots"></span></div></div>
   <div class="error-box" id="ap-error"></div>
+
+  <!-- Dashboard -->
   <div id="ap-result" style="display:none;animation:slideUp .4s cubic-bezier(.16,1,.3,1) both;">
-    <div class="airport-info-grid">
-      <div class="card">
-        <div class="card-header">
-          <span class="card-title">Airport Info</span>
-          <button class="fav-btn" id="ap-fav-btn" onclick="toggleFavourite()" title="Save to favourites">☆</button>
+    <div class="ap-dashboard">
+
+      <!-- Hero card — full width -->
+      <div class="ap-hero-card">
+        <div class="ap-hero-inner">
+          <div class="ap-hero-left">
+            <div class="ap-hero-icao" id="ap-d-icao">LRCL</div>
+            <div class="ap-hero-name" id="ap-d-name">Airport Name</div>
+            <div class="ap-hero-city" id="ap-d-city">City, Country</div>
+            <div class="ap-hero-tags" id="ap-d-tags"></div>
+          </div>
+          <div class="ap-hero-right">
+            <button class="ap-fav-large" id="ap-fav-btn" onclick="toggleFavourite()" title="Save to favourites">☆</button>
+            <div class="ap-coords" id="ap-d-coords"></div>
+          </div>
         </div>
-        <div class="card-body" id="ap-info"></div>
       </div>
-      <div class="card"><div class="card-header"><span class="card-title">Runways</span></div><div class="card-body" id="ap-runways"></div></div>
-    </div>
-    <div class="card"><div class="card-header"><span class="card-title">Active Runway Recommendation</span></div><div class="card-body" id="ap-rwy-rec"></div></div>
-    <div class="card" style="margin-top:14px;">
-      <div class="card-header">
-        <span class="card-title">Weather Trend</span>
-        <span id="ap-trend-status" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;">Last 3 hours</span>
+
+      <!-- Live METAR card -->
+      <div class="ap-metar-card">
+        <div class="ap-metar-header">
+          <span class="ap-metar-title">Live Weather</span>
+          <div class="ap-metar-live"><div class="ap-metar-dot"></div><span id="ap-metar-time">Fetching…</span></div>
+        </div>
+        <div class="ap-metar-body">
+          <div class="ap-metar-raw" id="ap-metar-raw">—</div>
+          <div class="ap-wx-grid" id="ap-wx-grid"></div>
+          <div class="ap-fc-row" id="ap-fc-row" style="display:none;"></div>
+        </div>
       </div>
-      <div class="card-body">
-        <div id="ap-trend-loading" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.4;">Fetching trend data…</div>
-        <div id="ap-trend-content"></div>
+
+      <!-- Runways card -->
+      <div class="ap-rwy-card">
+        <div class="ap-rwy-header">
+          <span class="ap-rwy-title">Runways</span>
+          <span id="ap-rwy-count" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;"></span>
+        </div>
+        <div class="ap-rwy-body" id="ap-rwy-body"></div>
       </div>
+
+      <!-- Trend card — full width -->
+      <div class="ap-trend-card">
+        <div class="ap-trend-header">
+          <span class="ap-trend-title">3-Hour Weather Trend</span>
+          <span id="ap-trend-status" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;">Last 3 hours</span>
+        </div>
+        <div class="ap-trend-body">
+          <div id="ap-trend-loading" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.4;">Fetching trend data…</div>
+          <div id="ap-trend-content"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -1435,12 +1544,24 @@ document.querySelectorAll('.reveal').forEach(el=>
 /* ══ NAVIGATION ══ */
 const PAGES=['home','decoder','route','atpl','tools','airport','pricing','about','changelog'];
 function goPage(id){
-  PAGES.forEach(p=>{
-    document.getElementById('page-'+p).classList.toggle('active',p===id);
-    const nl=document.getElementById('nl-'+p);
-    if(nl)nl.classList.toggle('active',p===id);
-  });
-  window.scrollTo({top:0,behavior:'smooth'});
+  const current=document.querySelector('.page.active');
+  if(current&&current.id!=='page-'+id){
+    current.classList.add('page-exit');
+    setTimeout(()=>{
+      current.classList.remove('active','page-exit');
+      const next=document.getElementById('page-'+id);
+      next.classList.add('active','page-enter');
+      setTimeout(()=>next.classList.remove('page-enter'),300);
+      PAGES.forEach(p=>{
+        const nl=document.getElementById('nl-'+p);
+        if(nl)nl.classList.toggle('active',p===id);
+      });
+      window.scrollTo({top:0,behavior:'instant'});
+    },180);
+  } else if(!current){
+    document.getElementById('page-'+id).classList.add('active');
+    PAGES.forEach(p=>{const nl=document.getElementById('nl-'+p);if(nl)nl.classList.toggle('active',p===id);});
+  }
 }
 function toggleMobileMenu(){document.getElementById('mobile-menu').classList.toggle('open');}
 function closeMobileMenu(){document.getElementById('mobile-menu').classList.remove('open');}
@@ -2124,6 +2245,21 @@ function loadFavAirport(icao){
 }
 
 /* ══ METAR TREND ══ */
+async function fetchMetarTrendFromRaw(icao,firstMetar,hasData){
+  // We already have the 3h METAR string from the initial lookup fetch
+  // Just pass it directly to the trend renderer
+  const trendContent=document.getElementById('ap-trend-content');
+  const trendLoading=document.getElementById('ap-trend-loading');
+  if(!trendContent)return;
+  if(!hasData){
+    if(trendLoading)trendLoading.style.display='none';
+    trendContent.innerHTML='<p style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--text);opacity:.38;">No trend data — serve via local server or GitHub Pages.</p>';
+    return;
+  }
+  // fetchMetarTrend will re-fetch with hours=3, which we already have
+  fetchMetarTrend(icao);
+}
+
 async function fetchMetarTrend(icao){
   const trendContent=document.getElementById('ap-trend-content');
   const trendLoading=document.getElementById('ap-trend-loading');
@@ -2231,47 +2367,148 @@ async function lookupAirport(){
   const wdir=parseFloat(document.getElementById('ap-wdir').value)||null;
   const wspd=parseFloat(document.getElementById('ap-wspd').value)||0;
   if(!icao||icao.length!==4){showErr('ap-error','Enter a valid 4-letter ICAO code.');return;}
-  hideErr('ap-error');document.getElementById('ap-result').style.display='none';
+  hideErr('ap-error');
+  document.getElementById('ap-result').style.display='none';
   document.getElementById('ap-loading').classList.add('show');
-  await new Promise(r=>setTimeout(r,150));
+
+  // Fetch live METAR in parallel with DB lookup
+  const [metarRaw]=await Promise.all([
+    fetchMetarRaw(icao,3),
+    new Promise(r=>setTimeout(r,100))
+  ]);
+
   document.getElementById('ap-loading').classList.remove('show');
   const db=getAirportInfo(icao);
-  if(!db){showErr('ap-error',`Airport ${icao} not found. Make sure airports.csv is in the same folder as clearskies.html and open with a local server (python3 -m http.server).`);return;}
-  document.getElementById('ap-info').innerHTML=`<div style="display:flex;flex-direction:column;gap:6px;">
-    <div><span class="sec-label">Name</span><div style="font-size:13px;font-weight:700;color:var(--text3);margin-top:2px;">${db.name}</div></div>
-    <div><span class="sec-label">Location</span><div style="font-size:11.5px;color:var(--text2);margin-top:2px;">${db.city}</div></div>
-    <div><span class="sec-label">Elevation</span><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--sky);margin-top:2px;">${db.elev!=null?db.elev+'ft AMSL':'—'}</div></div>
-    <div><span class="sec-label">ICAO</span><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--sky);margin-top:2px;">${icao}</div></div>
-  </div>`;
+  if(!db){showErr('ap-error',`Airport ${icao} not found. Make sure airports.csv is in the same folder.`);return;}
+
+  // ── Hero card ──
+  document.getElementById('ap-d-icao').textContent=icao;
+  document.getElementById('ap-d-name').textContent=db.name||icao;
+  document.getElementById('ap-d-city').textContent=db.city||'';
+
+  const tags=[];
+  if(db.elev!=null)tags.push(`<span class="ap-hero-tag elev">⬆ ${db.elev} ft AMSL</span>`);
+  if(db.type)tags.push(`<span class="ap-hero-tag type">${db.type.replace('_airport','').replace('_',' ')}</span>`);
+  document.getElementById('ap-d-tags').innerHTML=tags.join('');
+
+  if(db.lat&&db.lng){
+    const latStr=(db.lat>=0?'N':'S')+Math.abs(db.lat).toFixed(4)+'°';
+    const lngStr=(db.lng>=0?'E':'W')+Math.abs(db.lng).toFixed(4)+'°';
+    document.getElementById('ap-d-coords').innerHTML=latStr+'<br>'+lngStr;
+  } else {
+    document.getElementById('ap-d-coords').textContent='';
+  }
+
+  // ── Live METAR card ──
+  const hasMetar=metarRaw&&!metarRaw.includes('No METAR');
+  if(hasMetar){
+    const p=parseMetar(metarRaw);
+    const fc=getFlightCat(metarRaw);
+    document.getElementById('ap-metar-raw').textContent=metarRaw;
+    document.getElementById('ap-metar-time').textContent=p.time?p.time+' UTC':'Live';
+
+    const windStr=p.wind?(p.wind.dir==='VRB'?`VRB/${p.wind.spd}${p.wind.gust?'G'+p.wind.gust:''}kt`:`${String(p.wind.dir).padStart(3,'0')}°/${p.wind.spd}${p.wind.gust?'G'+p.wind.gust:''}kt`):'CALM';
+    const visStr=p.vis!=null?(p.vis>=9999?'10km+':p.vis+'m'):'—';
+    const ceilStr=p.ceiling!=null?p.ceiling+'ft':(p.vis>=9999?'CAVOK':'—');
+    const tempStr=p.temp!=null?`${p.temp}°/${p.dew}°`:'—';
+    const qnhStr=p.qnh?p.qnh.display||(p.qnh.val+' hPa'):'—';
+    const wxE=wxEmoji(metarRaw);
+
+    document.getElementById('ap-wx-grid').innerHTML=`
+      <div class="ap-wx-item"><div class="ap-wx-label">Wind</div><div class="ap-wx-val" style="font-size:12px;">${windStr}</div></div>
+      <div class="ap-wx-item"><div class="ap-wx-label">Visibility</div><div class="ap-wx-val" style="font-size:12px;">${visStr}</div></div>
+      <div class="ap-wx-item"><div class="ap-wx-label">Ceiling</div><div class="ap-wx-val" style="font-size:12px;">${ceilStr}</div></div>
+      <div class="ap-wx-item"><div class="ap-wx-label">Temp / Dew</div><div class="ap-wx-val" style="font-size:12px;">${tempStr}</div></div>
+      <div class="ap-wx-item"><div class="ap-wx-label">QNH</div><div class="ap-wx-val" style="font-size:11px;">${qnhStr}</div></div>
+      <div class="ap-wx-item"><div class="ap-wx-label">Conditions</div><div class="ap-wx-val" style="font-size:20px;">${wxE}</div></div>`;
+
+    const fcRow=document.getElementById('ap-fc-row');
+    fcRow.style.display='flex';
+    fcRow.innerHTML=`<span class="fc-badge ${fc.cls}" style="font-size:10px;padding:4px 12px;">${fc.cat}</span><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);margin-left:8px;">${fc.desc}</span>`;
+  } else {
+    document.getElementById('ap-metar-raw').textContent='No live METAR available — serve via local server or GitHub Pages';
+    document.getElementById('ap-metar-time').textContent='—';
+    document.getElementById('ap-wx-grid').innerHTML='';
+    document.getElementById('ap-fc-row').style.display='none';
+  }
+
+  // ── Runways card ──
   const rwys=db.rwys||[];
-  document.getElementById('ap-runways').innerHTML=rwys.length?rwys.map(r=>`<div class="airport-rwy"><span class="airport-rwy-id">${r.id}</span><span class="airport-rwy-info">${r.len}m · ${r.hdg}°</span></div>`).join(''):'<p style="font-family:\'JetBrains Mono\',monospace;font-size:9.5px;color:var(--text);opacity:.4;">No runway data</p>';
+  document.getElementById('ap-rwy-count').textContent=rwys.length?`${rwys.length} runway${rwys.length>1?'s':''}`:'' ;
+
+  // Compute wind scores if wind provided
+  let rwyScores={};
   if(wdir!==null&&rwys.length){
-    const recs=[];
     rwys.forEach(rwy=>{
       const h1=rwy.hdg,h2=rwy.hdgR!=null?rwy.hdgR:(rwy.hdg+180)%360;
       [h1,h2].forEach((hdg,idx)=>{
         const ang=(wdir-hdg)*Math.PI/180;
         const cross=Math.abs(wspd*Math.sin(ang));const head=wspd*Math.cos(ang);
         const rwyId=idx===0?rwy.id.split('/')[0]:(rwy.id.split('/')[1]||rwy.id);
-        recs.push({rwyId,cross:cross.toFixed(1),head:head.toFixed(1),score:head-cross*.5});
+        rwyScores[rwyId]={cross:cross.toFixed(1),head:head.toFixed(1),score:head-cross*.5};
       });
     });
-    recs.sort((a,b)=>b.score-a.score);
-    document.getElementById('ap-rwy-rec').innerHTML=`<p style="font-size:12px;color:var(--text2);margin-bottom:9px;">Wind: <strong style="color:var(--amber);">${wdir}° at ${wspd}kt</strong></p>
-    <div style="display:flex;flex-direction:column;gap:5px;">${recs.map((r,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 11px;background:var(--inset);border:1px solid var(--border);border-radius:7px;">
-      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--text3);width:32px;">RWY ${r.rwyId}</span>
-      <div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);">HW: <span style="color:var(--sky);">${r.head}kt</span>  XW: <span style="color:${r.cross>15?'var(--red)':r.cross>8?'var(--amber)':'var(--green)'};">${r.cross}kt</span></div>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:.1em;padding:2px 6px;border-radius:100px;${i===0?'background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);color:var(--green);':'background:var(--inset);border:1px solid var(--border);color:var(--text);'}">${i===0?'BEST':i===1?'ALT':'AVOID'}</span>
-    </div>`).join('')}</div>`;
-  } else {
-    document.getElementById('ap-rwy-rec').innerHTML='<p style="font-family:\'JetBrains Mono\',monospace;font-size:9.5px;color:var(--text);opacity:.4;">Enter wind direction and speed above to get runway recommendations.</p>';
   }
+  const maxLen=rwys.length?Math.max(...rwys.map(r=>r.len||0)):1;
+
+  // Sort runways by score if wind available
+  let sortedRwys=[...rwys];
+  if(wdir!==null){
+    // rank by best individual runway end
+    sortedRwys.sort((a,b)=>{
+      const aIds=[a.id.split('/')[0],a.id.split('/')[1]||''].filter(Boolean);
+      const bIds=[b.id.split('/')[0],b.id.split('/')[1]||''].filter(Boolean);
+      const aBest=Math.max(...aIds.map(id=>rwyScores[id]?.score||0));
+      const bBest=Math.max(...bIds.map(id=>rwyScores[id]?.score||0));
+      return bBest-aBest;
+    });
+  }
+
+  // Determine best/alt/avoid runway IDs
+  const allEnds=Object.entries(rwyScores).sort((a,b)=>b[1].score-a[1].score);
+  const bestId=allEnds[0]?.[0];
+  const altId=allEnds[1]?.[0];
+
+  document.getElementById('ap-rwy-body').innerHTML=sortedRwys.map((rwy,ri)=>{
+    const ids=rwy.id.split('/');
+    const lenM=rwy.len||0;
+    const pct=maxLen>0?Math.round(lenM/maxLen*100):100;
+    let recBadge='';
+    if(wdir!==null){
+      const rwyBestId=ids.map(id=>rwyScores[id]).filter(Boolean).sort((a,b)=>b.score-a.score)[0];
+      const thisEndId=ids.find(id=>id===bestId)||ids.find(id=>id===altId);
+      if(ids.includes(bestId))recBadge=`<span class="ap-rwy-rec-badge best">Best</span>`;
+      else if(ids.includes(altId))recBadge=`<span class="ap-rwy-rec-badge alt">Alt</span>`;
+      else if(ri>1)recBadge=`<span class="ap-rwy-rec-badge avoid">Avoid</span>`;
+    }
+    const hdgHtml=ids.map((id,i)=>{
+      const hdg=i===0?rwy.hdg:(rwy.hdgR||(rwy.hdg+180)%360);
+      const sc=rwyScores[id];
+      let compHtml='';
+      if(sc)compHtml=` <span style="font-size:8px;color:${sc.cross>15?'var(--red)':sc.cross>8?'var(--amber)':'var(--green)'};">XW:${sc.cross}kt</span>`;
+      return`<span class="ap-rwy-hdg">${hdg}°${compHtml}</span>`;
+    }).join('');
+    return`<div class="ap-rwy-item">
+      <div class="ap-rwy-top">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <span class="ap-rwy-id-big">${rwy.id}</span>
+          ${recBadge}
+        </div>
+        <span class="ap-rwy-len">${lenM?lenM+'m / '+Math.round(lenM*3.28083)+'ft':'—'}</span>
+      </div>
+      <div class="ap-rwy-hdgs">${hdgHtml}</div>
+      ${lenM?`<div class="ap-rwy-bar"><div class="ap-rwy-bar-fill" style="width:${pct}%;"></div></div>`:''}
+    </div>`;
+  }).join('');
+
   document.getElementById('ap-result').style.display='block';
+
   // Favourites
   _currentApIcao=icao;
   renderFavBtn(icao);
-  // Fetch weather trend
-  fetchMetarTrend(icao);
+
+  // Trend (already have 3h data from initial fetch — pass it directly)
+  fetchMetarTrendFromRaw(icao,metarRaw,hasMetar);
 }
 
 /* ══ TOOLS ══ */
