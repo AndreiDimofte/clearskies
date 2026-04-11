@@ -1597,7 +1597,7 @@ async function loadAirportDB(){
       const lenFt=c[3]?parseInt(c[3].replace(/"/g,'')):0;
       if(closed||lenFt<100)continue;
       const leId=(c[8]||'').replace(/"/g,'').trim();
-      const heId=(c[15]||'').replace(/"/g,'').trim();
+      const heId=(c[14]||'').replace(/"/g,'').trim();
       const leHdg=c[12]&&c[12].trim()!==''?parseFloat(c[12]):null;
       const heHdg=c[18]&&c[18].trim()!==''?parseFloat(c[18]):null;
       if(!leId||!heId||leHdg===null)continue;
