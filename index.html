@@ -6,6 +6,7 @@
 <title>ClearSkies — Aviation Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 [data-theme="dark"]{
@@ -713,6 +714,13 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .ap-chart-name{font-size:13px;font-weight:600;color:var(--text3);margin-bottom:2px;}
 .ap-chart-desc{font-size:11px;color:var(--text);opacity:.6;}
 .ap-chart-arrow{margin-left:auto;font-size:14px;color:var(--sky);opacity:.6;flex-shrink:0;}
+
+/* ── LUCIDE ICONS ── */
+[data-lucide]{display:inline-block;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.icon-sm[data-lucide]{width:13px;height:13px;}
+.icon-md[data-lucide]{width:17px;height:17px;}
+.icon-lg[data-lucide]{width:22px;height:22px;}
+.icon-xl[data-lucide]{width:28px;height:28px;}
 </style>
 </head>
 <body>
@@ -778,12 +786,12 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
     <h2 class="section-title reveal">Every tool you actually need.</h2>
     <p class="section-sub reveal">No cryptic codes. Plain English briefings and precise calculations whenever you need them.</p>
     <div class="feature-grid reveal">
-      <div class="feature-card" onclick="goPage('decoder')"><span class="feature-icon">🛩️</span><div class="feature-name">Decoder</div><div class="feature-desc">METAR, TAF, NOTAM, SIGMET, and ATC clearances — auto-detected and decoded in one place.</div><span class="ai-tag">✦ AI Powered</span></div>
-      <div class="feature-card" onclick="goPage('decoder');setType('atc')"><span class="feature-icon">🎙️</span><div class="feature-name">ATC Clearances</div><div class="feature-desc">Paste any ATC clearance or instruction. Get a plain-English breakdown and the exact readback to give.</div><span class="ai-tag">✦ AI Powered</span></div>
-      <div class="feature-card" onclick="goPage('route')"><span class="feature-icon">🗺️</span><div class="feature-name">Route Briefing</div><div class="feature-desc">Enter departure and destination ICAO codes. Live weather fetched and a structured en-route briefing generated.</div><span class="ai-tag">✦ AI Powered</span></div>
-      <div class="feature-card" onclick="goPage('atpl')"><span class="feature-icon">📚</span><div class="feature-name">ATPL Theory Q&amp;A</div><div class="feature-desc">Ask any aviation theory question across all ATPL subjects — meteorology, navigation, air law, performance, and more.</div><span class="ai-tag">✦ AI Powered</span></div>
-      <div class="feature-card" onclick="goPage('tools')"><span class="feature-icon">📊</span><div class="feature-name">Aviation Tools</div><div class="feature-desc">T/O & landing performance, fuel planning, weight & balance, crosswind, density altitude, unit converter.</div></div>
-      <div class="feature-card" onclick="goPage('airport')"><span class="feature-icon">🏛️</span><div class="feature-name">Airport Overview</div><div class="feature-desc">Look up any of 85,000+ airports worldwide. Full runway data and active runway recommendation for your wind.</div></div>
+      <div class="feature-card" onclick="goPage('decoder')"><span class="feature-icon"><i data-lucide="radio-tower" style="width:20px;height:20px;stroke:var(--sky);"></i></span><div class="feature-name">Decoder</div><div class="feature-desc">METAR, TAF, NOTAM, SIGMET, and ATC clearances — auto-detected and decoded in one place.</div><span class="ai-tag"><i data-lucide="zap" style="width:10px;height:10px;margin-right:3px;"></i>AI Powered</span></div>
+      <div class="feature-card" onclick="goPage('decoder');setType('atc')"><span class="feature-icon"><i data-lucide="radio" style="width:20px;height:20px;stroke:var(--sky);"></i></span><div class="feature-name">ATC Clearances</div><div class="feature-desc">Paste any ATC clearance or instruction. Get a plain-English breakdown and the exact readback to give.</div><span class="ai-tag"><i data-lucide="zap" style="width:10px;height:10px;margin-right:3px;"></i>AI Powered</span></div>
+      <div class="feature-card" onclick="goPage('route')"><span class="feature-icon"><i data-lucide="map" style="width:20px;height:20px;stroke:var(--sky);"></i></span><div class="feature-name">Route Briefing</div><div class="feature-desc">Enter departure and destination ICAO codes. Live weather fetched and a structured en-route briefing generated.</div><span class="ai-tag"><i data-lucide="zap" style="width:10px;height:10px;margin-right:3px;"></i>AI Powered</span></div>
+      <div class="feature-card" onclick="goPage('atpl')"><span class="feature-icon"><i data-lucide="book-open" style="width:20px;height:20px;stroke:var(--sky);"></i></span><div class="feature-name">ATPL Theory Q&amp;A</div><div class="feature-desc">Ask any aviation theory question across all ATPL subjects — meteorology, navigation, air law, performance, and more.</div><span class="ai-tag"><i data-lucide="zap" style="width:10px;height:10px;margin-right:3px;"></i>AI Powered</span></div>
+      <div class="feature-card" onclick="goPage('tools')"><span class="feature-icon"><i data-lucide="gauge" style="width:20px;height:20px;stroke:var(--sky);"></i></span><div class="feature-name">Aviation Tools</div><div class="feature-desc">T/O & landing performance, fuel planning, weight & balance, crosswind, density altitude, unit converter.</div></div>
+      <div class="feature-card" onclick="goPage('airport')"><span class="feature-icon"><i data-lucide="map-pin" style="width:20px;height:20px;stroke:var(--sky);"></i></span><div class="feature-name">Airport Overview</div><div class="feature-desc">Look up any of 85,000+ airports worldwide. Full runway data and active runway recommendation for your wind.</div></div>
     </div>
   </div>
   <div class="showcase">
@@ -835,7 +843,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="page" id="page-decoder">
 <div class="app">
   <div class="page-hero-wide">
-    <div class="phw-eyebrow">✦ AI Powered</div>
+    <div class="phw-eyebrow"><i data-lucide="zap" style="width:9px;height:9px;margin-right:4px;"></i>AI Powered</div>
     <h1 class="phw-title">Aviation <span>Decoder</span></h1>
     <p class="phw-sub">Paste any aviation message and get a plain-English briefing in seconds. Auto-detects the type — or choose manually. Instrument strips, flight categories, and priority flags included.</p>
     <div class="phw-tags">
@@ -844,34 +852,34 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
       <span class="phw-tag sky">NOTAM</span>
       <span class="phw-tag sky">SIGMET</span>
       <span class="phw-tag sky">ATC Clearances</span>
-      <span class="phw-tag ai">✦ AI Powered</span>
+      <span class="phw-tag ai"><i data-lucide="zap" style="width:9px;height:9px;margin-right:3px;"></i>AI Powered</span>
     </div>
   </div>
 
   <!-- Type explainer cards -->
   <div class="type-explainers">
     <div class="te-card" onclick="loadEx('metar');setType('metar')">
-      <div class="te-card-icon">🌤️</div>
+      <div class="te-card-icon"><i data-lucide="cloud-sun" style="width:22px;height:22px;stroke:var(--sky);"></i></div>
       <div class="te-card-name">METAR</div>
       <div class="te-card-desc">Current aerodrome weather observation</div>
     </div>
     <div class="te-card" onclick="loadEx('taf');setType('metar')">
-      <div class="te-card-icon">📅</div>
+      <div class="te-card-icon"><i data-lucide="calendar-clock" style="width:22px;height:22px;stroke:var(--sky);"></i></div>
       <div class="te-card-name">TAF</div>
       <div class="te-card-desc">24–30h terminal aerodrome forecast</div>
     </div>
     <div class="te-card" onclick="loadEx('notam');setType('notam')">
-      <div class="te-card-icon">📋</div>
+      <div class="te-card-icon"><i data-lucide="clipboard-list" style="width:22px;height:22px;stroke:var(--sky);"></i></div>
       <div class="te-card-name">NOTAM</div>
       <div class="te-card-desc">Active closures, restrictions &amp; hazards</div>
     </div>
     <div class="te-card" onclick="loadEx('sigmet');setType('sigmet')">
-      <div class="te-card-icon">⚡</div>
+      <div class="te-card-icon"><i data-lucide="zap" style="width:22px;height:22px;stroke:var(--amber);"></i></div>
       <div class="te-card-name">SIGMET</div>
       <div class="te-card-desc">Severe en-route weather advisory</div>
     </div>
     <div class="te-card" onclick="loadEx('atc');setType('atc')">
-      <div class="te-card-icon">🎙️</div>
+      <div class="te-card-icon"><i data-lucide="radio" style="width:22px;height:22px;stroke:var(--sky);"></i></div>
       <div class="te-card-name">ATC</div>
       <div class="te-card-desc">Clearances, instructions &amp; readbacks</div>
     </div>
@@ -932,12 +940,12 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
         <span class="badge badge-type" id="badge-type">METAR</span>
         <span class="badge badge-low"  id="badge-priority">Routine</span>
         <span id="badge-fc" style="display:none;" class="badge fc-vfr"></span>
-        <span class="badge ai-badge">✦ AI</span>
+        <span class="badge ai-badge"><i data-lucide="zap" style="width:9px;height:9px;margin-right:2px;"></i>AI</span>
         <span class="wx-emoji" id="wx-emoji"></span>
       </div>
       <div class="actions-row">
-        <button class="fb-btn" id="fb-up"   onclick="feedback('up')">👍</button>
-        <button class="fb-btn" id="fb-down" onclick="feedback('down')">👎</button>
+        <button class="fb-btn" id="fb-up" onclick="feedback('up')"><i data-lucide="thumbs-up" style="width:13px;height:13px;"></i></button>
+        <button class="fb-btn" id="fb-down" onclick="feedback('down')"><i data-lucide="thumbs-down" style="width:13px;height:13px;"></i></button>
         <button class="action-btn" onclick="copyResult()">Copy</button>
         <button class="action-btn" onclick="exportDecoderPDF()">PDF</button>
         <button class="action-btn" onclick="clearAll()">Clear</button>
@@ -958,33 +966,33 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="page" id="page-route">
 <div class="app">
   <div class="page-hero-wide">
-    <div class="phw-eyebrow">✦ AI Powered · Live Weather</div>
+    <div class="phw-eyebrow"><i data-lucide="zap" style="width:9px;height:9px;margin-right:4px;"></i>AI Powered · Live Weather</div>
     <h1 class="phw-title">Route <span>Briefing</span></h1>
     <p class="phw-sub">Enter departure and destination ICAO codes. ClearSkies fetches live METARs, draws the great-circle route on a map, and generates a structured AI briefing — including a go/no-go assessment.</p>
     <div class="phw-tags">
       <span class="phw-tag sky">Live METARs</span>
       <span class="phw-tag sky">Route Map</span>
       <span class="phw-tag sky">Distance in NM</span>
-      <span class="phw-tag ai">✦ AI Briefing</span>
+      <span class="phw-tag ai"><i data-lucide="zap" style="width:9px;height:9px;margin-right:3px;"></i>AI Briefing</span>
     </div>
   </div>
 
   <div class="route-steps">
     <div class="rs-card">
       <div class="rs-num">Step 01</div>
-      <div class="rs-icon">📡</div>
+      <div class="rs-icon"><i data-lucide="radio-tower" style="width:26px;height:26px;stroke:var(--sky);"></i></div>
       <div class="rs-title">Live Weather Fetched</div>
       <div class="rs-desc">Real-time METARs are pulled from aviationweather.gov for both airports the moment you click generate.</div>
     </div>
     <div class="rs-card">
       <div class="rs-num">Step 02</div>
-      <div class="rs-icon">🗺️</div>
+      <div class="rs-icon"><i data-lucide="map" style="width:26px;height:26px;stroke:var(--sky);"></i></div>
       <div class="rs-title">Route Mapped</div>
       <div class="rs-desc">A great-circle route is drawn between your airports with distance shown in NM and km.</div>
     </div>
     <div class="rs-card">
       <div class="rs-num">Step 03</div>
-      <div class="rs-icon">✦</div>
+      <div class="rs-icon"><i data-lucide="zap" style="width:26px;height:26px;stroke:var(--sky);"></i></div>
       <div class="rs-title">AI Briefing Generated</div>
       <div class="rs-desc">Departure conditions, destination conditions, en-route considerations, and a go/no-go recommendation.</div>
     </div>
@@ -1029,7 +1037,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
   </div>
 
   <div class="result-wrap" id="route-result-wrap">
-    <div class="result-topbar"><div class="badges-row"><span class="badge badge-type">Route Briefing</span><span class="badge ai-badge">✦ AI</span></div></div>
+    <div class="result-topbar"><div class="badges-row"><span class="badge badge-type">Route Briefing</span><span class="badge ai-badge"><i data-lucide="zap" style="width:9px;height:9px;margin-right:2px;"></i>AI</span></div></div>
     <div class="cockpit-panel">
       <div class="cp-topbar"><span class="cp-label" id="route-cp-label">En-Route Briefing</span><span class="cp-id" id="route-cp-id">RTE-0001</span></div>
       <div class="cp-sections" id="route-sections"></div>
@@ -1043,11 +1051,11 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="page" id="page-atpl">
 <div class="app">
   <div class="page-hero-wide">
-    <div class="phw-eyebrow">✦ AI Powered · 14 Subjects</div>
+    <div class="phw-eyebrow"><i data-lucide="zap" style="width:9px;height:9px;margin-right:4px;"></i>AI Powered · 14 Subjects</div>
     <h1 class="phw-title">ATPL <span>Theory Q&amp;A</span></h1>
     <p class="phw-sub">Your personal aviation theory instructor, available 24/7. Ask anything across all 14 ATPL subjects. You'll get a structured answer, a plain-English explanation, a memory tip, and related topics to study next.</p>
     <div class="phw-tags">
-      <span class="phw-tag ai">✦ AI Powered</span>
+      <span class="phw-tag ai"><i data-lucide="zap" style="width:9px;height:9px;margin-right:3px;"></i>AI Powered</span>
       <span class="phw-tag sky">14 ATPL Subjects</span>
       <span class="phw-tag sky">Memory Tips</span>
       <span class="phw-tag sky">Exam Focused</span>
@@ -1091,7 +1099,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
   <div class="error-box" id="atpl-error"></div>
   <div class="result-wrap" id="atpl-result-wrap">
     <div class="result-topbar">
-      <div class="badges-row"><span class="badge badge-type" id="atpl-subject-badge">Theory</span><span class="badge ai-badge">✦ AI</span></div>
+      <div class="badges-row"><span class="badge badge-type" id="atpl-subject-badge">Theory</span><span class="badge ai-badge"><i data-lucide="zap" style="width:9px;height:9px;margin-right:2px;"></i>AI</span></div>
       <div class="actions-row"><button class="action-btn" onclick="copyAtpl()">Copy</button></div>
     </div>
     <div class="cockpit-panel">
@@ -1122,19 +1130,19 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 
   <!-- Tool selector strip -->
   <div class="tool-strip">
-    <button class="tool-strip-btn active" id="ts-runway"   onclick="openTool('runway')">🛬 Runway</button>
-    <button class="tool-strip-btn"        id="ts-perf"     onclick="openTool('perf')">📊 Performance</button>
-    <button class="tool-strip-btn"        id="ts-wb"       onclick="openTool('wb')">⚖️ W&amp;B</button>
-    <button class="tool-strip-btn"        id="ts-fuel"     onclick="openTool('fuel')">⛽ Fuel</button>
-    <button class="tool-strip-btn"        id="ts-xwind"    onclick="openTool('xwind')">💨 Crosswind</button>
-    <button class="tool-strip-btn"        id="ts-density"  onclick="openTool('density')">🌡️ Density Alt</button>
-    <button class="tool-strip-btn"        id="ts-converter" onclick="openTool('converter')">🔄 Units</button>
+    <button class="tool-strip-btn active" id="ts-runway"   onclick="openTool('runway')"><i data-lucide="arrow-down-to-line" style="width:13px;height:13px;margin-right:4px;"></i>Runway</button>
+    <button class="tool-strip-btn"        id="ts-perf"     onclick="openTool('perf')"><i data-lucide="bar-chart-2" style="width:13px;height:13px;margin-right:4px;"></i>Performance</button>
+    <button class="tool-strip-btn"        id="ts-wb"       onclick="openTool('wb')"><i data-lucide="scale" style="width:13px;height:13px;margin-right:4px;"></i>W&amp;B</button>
+    <button class="tool-strip-btn"        id="ts-fuel"     onclick="openTool('fuel')"><i data-lucide="fuel" style="width:13px;height:13px;margin-right:4px;"></i>Fuel</button>
+    <button class="tool-strip-btn"        id="ts-xwind"    onclick="openTool('xwind')"><i data-lucide="wind" style="width:13px;height:13px;margin-right:4px;"></i>Crosswind</button>
+    <button class="tool-strip-btn"        id="ts-density"  onclick="openTool('density')"><i data-lucide="thermometer" style="width:13px;height:13px;margin-right:4px;"></i>Density Alt</button>
+    <button class="tool-strip-btn"        id="ts-converter" onclick="openTool('converter')"><i data-lucide="arrow-left-right" style="width:13px;height:13px;margin-right:4px;"></i>Units</button>
   </div>
 
   <!-- RUNWAY -->
   <div class="tool-panel show" id="tool-runway">
     <div class="tool-hero">
-      <div class="tool-hero-icon">🛬</div>
+      <div class="tool-hero-icon"><i data-lucide="arrow-down-to-line" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">Runway Analysis</div>
         <div class="tool-hero-desc">Enter your wind and available runways. The analysis ranks each option by headwind component and crosswind exposure, highlighting the safest choice for landing or departure.</div>
@@ -1147,14 +1155,14 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
         <div><span class="sec-label">Runways (e.g. 09/27, 18/36)</span><input class="field-input" id="rwy-config" type="text" placeholder="09/27" oninput="runRwyAnalysis()"></div>
       </div>
       <div id="rwy-results"></div>
-      <div class="tool-tip">💡 Separate multiple runway pairs with a comma. Max demonstrated crosswind is typically 15–20kt for GA aircraft, 35kt+ for airliners.</div>
+      <div class="tool-tip"><i data-lucide="lightbulb" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Separate multiple runway pairs with a comma. Max demonstrated crosswind is typically 15–20kt for GA aircraft, 35kt+ for airliners.</div>
     </div></div>
   </div>
 
   <!-- PERF -->
   <div class="tool-panel" id="tool-perf">
     <div class="tool-hero">
-      <div class="tool-hero-icon">📊</div>
+      <div class="tool-hero-icon"><i data-lucide="bar-chart-2" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">T/O &amp; Landing Performance</div>
         <div class="tool-hero-desc">Computes V-speeds and field length requirements adjusted for density altitude, aircraft weight, headwind component, and runway slope. Covers three aircraft types across multiple flap configurations.</div>
@@ -1172,14 +1180,14 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
         <div><span class="sec-label">Runway Slope (%, + = uphill)</span><input class="field-input" id="perf-slope" type="number" placeholder="0" oninput="calcPerf()"></div>
       </div>
       <div id="perf-results"></div>
-      <div class="tool-tip">⚠️ Reference figures only. Always use the approved AFM or FCOM for actual flight operations.</div>
+      <div class="tool-tip"><i data-lucide="triangle-alert" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Reference figures only. Always use the approved AFM or FCOM for actual flight operations.</div>
     </div></div>
   </div>
 
   <!-- W&B -->
   <div class="tool-panel" id="tool-wb">
     <div class="tool-hero">
-      <div class="tool-hero-icon">⚖️</div>
+      <div class="tool-hero-icon"><i data-lucide="scale" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">Weight &amp; Balance</div>
         <div class="tool-hero-desc">Calculates total aircraft weight and centre of gravity, then plots the result on the CG envelope. A green dot means you're within limits. Red means do not fly — redistribute load or reduce fuel/payload.</div>
@@ -1190,14 +1198,14 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
       <div id="wb-fields" class="grid2" style="margin-bottom:14px;"></div>
       <div id="wb-results"></div>
       <div class="wb-canvas-wrap" id="wb-chart-wrap" style="display:none;"><div class="wb-canvas-title">CG Envelope</div><canvas class="wb-chart" id="wb-canvas" width="600" height="200"></canvas><div class="wb-status" id="wb-status"></div></div>
-      <div class="tool-tip">⚠️ Reference only. Always verify with approved weight &amp; balance documents before flight.</div>
+      <div class="tool-tip"><i data-lucide="triangle-alert" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Reference only. Always verify with approved weight &amp; balance documents before flight.</div>
     </div></div>
   </div>
 
   <!-- FUEL -->
   <div class="tool-panel" id="tool-fuel">
     <div class="tool-hero">
-      <div class="tool-hero-icon">⛽</div>
+      <div class="tool-hero-icon"><i data-lucide="fuel" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">Fuel Planner</div>
         <div class="tool-hero-desc">Calculates ICAO-standard block fuel: trip + alternate + final reserve + contingency + taxi. Enter your route distance, cruise speed, and alternate distance to get a complete fuel breakdown.</div>
@@ -1215,14 +1223,14 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
         <div><span class="sec-label">Contingency (%)</span><input class="field-input" id="fuel-cont" type="number" placeholder="5" oninput="calcFuel()"></div>
       </div>
       <div id="fuel-results"></div>
-      <div class="tool-tip">💡 ICAO requires final reserve of 30min (IFR) or 45min (VFR) at holding speed. Contingency is typically 5% of trip fuel.</div>
+      <div class="tool-tip"><i data-lucide="lightbulb" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>ICAO requires final reserve of 30min (IFR) or 45min (VFR) at holding speed. Contingency is typically 5% of trip fuel.</div>
     </div></div>
   </div>
 
   <!-- XWIND -->
   <div class="tool-panel" id="tool-xwind">
     <div class="tool-hero">
-      <div class="tool-hero-icon">💨</div>
+      <div class="tool-hero-icon"><i data-lucide="wind" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">Crosswind Calculator</div>
         <div class="tool-hero-desc">Resolves wind into headwind and crosswind components relative to the runway heading. A positive headwind value reduces required field length; crosswind is compared against typical demonstrated limits.</div>
@@ -1236,14 +1244,14 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
       </div>
       <div class="result-grid" id="xw-results" style="display:none;"></div>
       <p id="xw-note" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.45;margin-top:6px;"></p>
-      <div class="tool-tip">💡 Runway heading = magnetic heading of the runway surface, not the runway number × 10 (which may differ by magnetic variation).</div>
+      <div class="tool-tip"><i data-lucide="lightbulb" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Runway heading = magnetic heading of the runway surface, not the runway number × 10 (which may differ by magnetic variation).</div>
     </div></div>
   </div>
 
   <!-- DENSITY -->
   <div class="tool-panel" id="tool-density">
     <div class="tool-hero">
-      <div class="tool-hero-icon">🌡️</div>
+      <div class="tool-hero-icon"><i data-lucide="thermometer" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">Density Altitude</div>
         <div class="tool-hero-desc">Density altitude is pressure altitude corrected for non-standard temperature. High DA means thinner air — less engine power, less lift, longer takeoff roll. Critical for operations at hot, high, or humid airports.</div>
@@ -1256,14 +1264,14 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
         <div><span class="sec-label">QNH (hPa)</span><input class="field-input" id="da-qnh" type="number" placeholder="1013" oninput="calcDA()"></div>
       </div>
       <div class="result-grid" id="da-results" style="display:none;"></div>
-      <div class="tool-tip">💡 <strong>Rule of thumb:</strong> DA increases ~120ft per °C above ISA. At Denver (5,400ft), a hot summer day can produce a DA above 8,000ft.</div>
+      <div class="tool-tip"><i data-lucide="lightbulb" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i><strong>Rule of thumb:</strong> DA increases ~120ft per °C above ISA. At Denver (5,400ft), a hot summer day can produce a DA above 8,000ft.</div>
     </div></div>
   </div>
 
   <!-- CONVERTER -->
   <div class="tool-panel" id="tool-converter">
     <div class="tool-hero">
-      <div class="tool-hero-icon">🔄</div>
+      <div class="tool-hero-icon"><i data-lucide="arrow-left-right" style="width:32px;height:32px;stroke:var(--sky);"></i></div>
       <div>
         <div class="tool-hero-title">Unit Converter</div>
         <div class="tool-hero-desc">Convert between aviation units instantly. Type in either field and the other updates automatically.</div>
@@ -1319,9 +1327,9 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
           Look Up Airport
         </button>
         <div class="ap-search-meta">
-          <span>📡 Live METAR fetched automatically</span>
-          <span>🛬 Wind → runway recommendation</span>
-          <span>📈 3-hour weather trend</span>
+          <span><i data-lucide="radio-tower" style="width:10px;height:10px;margin-right:4px;"></i>Live METAR fetched automatically</span>
+          <span><i data-lucide="arrow-down-to-line" style="width:10px;height:10px;margin-right:4px;"></i>Wind → runway recommendation</span>
+          <span><i data-lucide="trending-up" style="width:10px;height:10px;margin-right:4px;"></i>3-hour weather trend</span>
         </div>
       </div>
     </div>
@@ -1345,7 +1353,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
           </div>
           <div class="ap-hero-right">
             <button class="ap-fav-large" id="ap-fav-btn" onclick="toggleFavourite()" title="Save to favourites">☆</button>
-          <button class="ap-fav-large" onclick="exportToPDF()" title="Export to PDF" style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text2);">PDF</button>
+          <button class="ap-fav-large" onclick="exportToPDF()" title="Export to PDF"><i data-lucide="download" style="width:16px;height:16px;"></i></button>
             <div class="ap-coords" id="ap-d-coords"></div>
           </div>
         </div>
@@ -1388,7 +1396,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
       <!-- Sun times + Charts row -->
       <div class="ap-sun-card">
         <div class="ap-trend-header">
-          <span class="ap-trend-title">☀ Sunrise &amp; Sunset</span>
+          <span class="ap-trend-title"><i data-lucide="sun" style="width:13px;height:13px;margin-right:5px;stroke:var(--amber);"></i>Sunrise &amp; Sunset</span>
           <span id="ap-sun-date" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;"></span>
         </div>
         <div class="ap-trend-body" id="ap-sun-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
@@ -1404,22 +1412,22 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
       <!-- Charts links -->
       <div class="ap-charts-card">
         <div class="ap-trend-header">
-          <span class="ap-trend-title">📋 Charts</span>
+          <span class="ap-trend-title"><i data-lucide="clipboard-list" style="width:13px;height:13px;margin-right:5px;"></i>Charts</span>
           <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;">External links</span>
         </div>
         <div class="ap-trend-body" style="display:flex;flex-direction:column;gap:8px;">
           <a class="ap-chart-link" id="ap-chart-chartfox" href="#" target="_blank" rel="noopener">
-            <span class="ap-chart-icon">🗺</span>
+            <span class="ap-chart-icon"><i data-lucide="map" style="width:18px;height:18px;stroke:var(--sky);"></i></span>
             <div><div class="ap-chart-name">ChartFox</div><div class="ap-chart-desc">Approach plates, SIDs, STARs, airport diagrams</div></div>
             <span class="ap-chart-arrow">↗</span>
           </a>
           <a class="ap-chart-link" id="ap-chart-skyvector" href="#" target="_blank" rel="noopener">
-            <span class="ap-chart-icon">✈</span>
+            <span class="ap-chart-icon"><i data-lucide="plane" style="width:18px;height:18px;stroke:var(--sky);"></i></span>
             <div><div class="ap-chart-name">SkyVector</div><div class="ap-chart-desc">VFR sectionals, IFR enroute charts</div></div>
             <span class="ap-chart-arrow">↗</span>
           </a>
           <a class="ap-chart-link" id="ap-chart-ourairports" href="#" target="_blank" rel="noopener">
-            <span class="ap-chart-icon">📡</span>
+            <span class="ap-chart-icon"><i data-lucide="radio-tower" style="width:18px;height:18px;stroke:var(--sky);"></i></span>
             <div><div class="ap-chart-name">Airport Info Page</div><div class="ap-chart-desc">Frequencies, FBO, additional data</div></div>
             <span class="ap-chart-arrow">↗</span>
           </a>
@@ -1505,26 +1513,26 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
     <p class="about-hero-sub">ClearSkies started as a project to solve a real frustration: aviation data is everywhere, but understanding it quickly is hard. METARs, NOTAMs, TAFs, ATC clearances — all in cryptic shorthand that takes years to decode fluently. ClearSkies makes it instant.</p>
   </div>
   <div class="about-grid">
-    <div class="about-card"><div class="about-card-icon">🎯</div><div class="about-card-title">The Mission</div><div class="about-card-body">Make aviation data accessible to everyone — from student pilots on their first solo to experienced captains who need a fast briefing. Plain English, structured output, zero confusion.</div></div>
-    <div class="about-card"><div class="about-card-icon">✈️</div><div class="about-card-title">The Story</div><div class="about-card-body">ClearSkies was built out of genuine frustration with how inaccessible aviation data is. Every feature comes from a real problem encountered in real flight training — nothing hypothetical, nothing added for show.</div></div>
-    <div class="about-card"><div class="about-card-icon">🔬</div><div class="about-card-title">The Approach</div><div class="about-card-body">Structured data — wind, visibility, ceiling, QNH — is extracted with precise logic, never guessed. AI is used only where it genuinely helps: narrative summaries, theory explanations, clearance interpretation.</div></div>
-    <div class="about-card"><div class="about-card-icon">🚀</div><div class="about-card-title">The Roadmap</div><div class="about-card-body">Go/No-Go assistant, live METAR trends, shareable briefing links, ATPL exam practice mode, and PWA support for offline use — all actively in development.</div></div>
+    <div class="about-card"><div class="about-card-icon"><i data-lucide="target" style="width:28px;height:28px;stroke:var(--sky);"></i></div><div class="about-card-title">The Mission</div><div class="about-card-body">Make aviation data accessible to everyone — from student pilots on their first solo to experienced captains who need a fast briefing. Plain English, structured output, zero confusion.</div></div>
+    <div class="about-card"><div class="about-card-icon"><i data-lucide="plane" style="width:28px;height:28px;stroke:var(--sky);"></i></div><div class="about-card-title">The Story</div><div class="about-card-body">ClearSkies was built out of genuine frustration with how inaccessible aviation data is. Every feature comes from a real problem encountered in real flight training — nothing hypothetical, nothing added for show.</div></div>
+    <div class="about-card"><div class="about-card-icon"><i data-lucide="microscope" style="width:28px;height:28px;stroke:var(--sky);"></i></div><div class="about-card-title">The Approach</div><div class="about-card-body">Structured data — wind, visibility, ceiling, QNH — is extracted with precise logic, never guessed. AI is used only where it genuinely helps: narrative summaries, theory explanations, clearance interpretation.</div></div>
+    <div class="about-card"><div class="about-card-icon"><i data-lucide="rocket" style="width:28px;height:28px;stroke:var(--sky);"></i></div><div class="about-card-title">The Roadmap</div><div class="about-card-body">Go/No-Go assistant, live METAR trends, shareable briefing links, ATPL exam practice mode, and PWA support for offline use — all actively in development.</div></div>
   </div>
   <div class="about-timeline">
     <div class="about-tl-title">Development Timeline</div>
-    <div class="about-tl-item"><div class="about-tl-dot">🛫</div><div><div class="about-tl-ver">v0.1 — April 2026</div><div class="about-tl-text">First working METAR/NOTAM decoder. Cockpit panel UI, dark mode, animated radar background.</div></div></div>
-    <div class="about-tl-item"><div class="about-tl-dot">🛠️</div><div><div class="about-tl-ver">v0.2–0.5</div><div class="about-tl-text">Flight category classifier, glossary tooltips, ICAO airport resolution, instrument strips.</div></div></div>
-    <div class="about-tl-item"><div class="about-tl-dot">📊</div><div><div class="about-tl-ver">v0.6–0.7</div><div class="about-tl-text">Multi-page app, Tools suite, ATC Decoder, Airport page.</div></div></div>
-    <div class="about-tl-item"><div class="about-tl-dot">🌍</div><div><div class="about-tl-ver">v0.8</div><div class="about-tl-text">Full landing page, Pricing, NOTAM/TAF/SIGMET strips, weight validation.</div></div></div>
-    <div class="about-tl-item"><div class="about-tl-dot">⚡</div><div><div class="about-tl-ver">v0.9 — Now</div><div class="about-tl-text">Live METAR fetch, Route Briefing with map, ATPL Q&A, Weight &amp; Balance, unified Decoder, OurAirports integration.</div></div></div>
+    <div class="about-tl-item"><div class="about-tl-dot"><i data-lucide="plane-takeoff" style="width:16px;height:16px;stroke:var(--sky);"></i></div><div><div class="about-tl-ver">v0.1 — April 2026</div><div class="about-tl-text">First working METAR/NOTAM decoder. Cockpit panel UI, dark mode, animated radar background.</div></div></div>
+    <div class="about-tl-item"><div class="about-tl-dot"><i data-lucide="wrench" style="width:16px;height:16px;stroke:var(--sky);"></i></div><div><div class="about-tl-ver">v0.2–0.5</div><div class="about-tl-text">Flight category classifier, glossary tooltips, ICAO airport resolution, instrument strips.</div></div></div>
+    <div class="about-tl-item"><div class="about-tl-dot"><i data-lucide="bar-chart-2" style="width:16px;height:16px;stroke:var(--sky);"></i></div><div><div class="about-tl-ver">v0.6–0.7</div><div class="about-tl-text">Multi-page app, Tools suite, ATC Decoder, Airport page.</div></div></div>
+    <div class="about-tl-item"><div class="about-tl-dot"><i data-lucide="globe" style="width:16px;height:16px;stroke:var(--sky);"></i></div><div><div class="about-tl-ver">v0.8</div><div class="about-tl-text">Full landing page, Pricing, NOTAM/TAF/SIGMET strips, weight validation.</div></div></div>
+    <div class="about-tl-item"><div class="about-tl-dot"><i data-lucide="zap" style="width:16px;height:16px;stroke:var(--sky);"></i></div><div><div class="about-tl-ver">v0.9 — Now</div><div class="about-tl-text">Live METAR fetch, Route Briefing with map, ATPL Q&A, Weight &amp; Balance, unified Decoder, OurAirports integration.</div></div></div>
   </div>
   <div class="about-tech-grid">
-    <div class="about-tech-item"><div class="about-tech-icon">🤖</div><div class="about-tech-name">Claude AI</div><div class="about-tech-desc">Narrative briefings &amp; Q&A</div></div>
-    <div class="about-tech-item"><div class="about-tech-icon">🌐</div><div class="about-tech-name">aviationweather.gov</div><div class="about-tech-desc">Live METAR data, free</div></div>
-    <div class="about-tech-item"><div class="about-tech-icon">📦</div><div class="about-tech-name">OurAirports</div><div class="about-tech-desc">85k+ airports &amp; runways</div></div>
-    <div class="about-tech-item"><div class="about-tech-icon">🗺️</div><div class="about-tech-name">Leaflet + OpenStreetMap</div><div class="about-tech-desc">Route maps, free</div></div>
-    <div class="about-tech-item"><div class="about-tech-icon">🎨</div><div class="about-tech-name">Vanilla HTML/CSS</div><div class="about-tech-desc">No frameworks, fast everywhere</div></div>
-    <div class="about-tech-item"><div class="about-tech-icon">🔧</div><div class="about-tech-name">GitHub Pages</div><div class="about-tech-desc">Free hosting &amp; deployment</div></div>
+    <div class="about-tech-item"><div class="about-tech-icon"><i data-lucide="bot" style="width:22px;height:22px;stroke:var(--sky);"></i></div><div class="about-tech-name">Claude AI</div><div class="about-tech-desc">Narrative briefings &amp; Q&A</div></div>
+    <div class="about-tech-item"><div class="about-tech-icon"><i data-lucide="globe" style="width:22px;height:22px;stroke:var(--sky);"></i></div><div class="about-tech-name">aviationweather.gov</div><div class="about-tech-desc">Live METAR data, free</div></div>
+    <div class="about-tech-item"><div class="about-tech-icon"><i data-lucide="database" style="width:22px;height:22px;stroke:var(--sky);"></i></div><div class="about-tech-name">OurAirports</div><div class="about-tech-desc">85k+ airports &amp; runways</div></div>
+    <div class="about-tech-item"><div class="about-tech-icon"><i data-lucide="map" style="width:22px;height:22px;stroke:var(--sky);"></i></div><div class="about-tech-name">Leaflet + OpenStreetMap</div><div class="about-tech-desc">Route maps, free</div></div>
+    <div class="about-tech-item"><div class="about-tech-icon"><i data-lucide="paintbrush" style="width:22px;height:22px;stroke:var(--sky);"></i></div><div class="about-tech-name">Vanilla HTML/CSS</div><div class="about-tech-desc">No frameworks, fast everywhere</div></div>
+    <div class="about-tech-item"><div class="about-tech-icon"><i data-lucide="wrench" style="width:22px;height:22px;stroke:var(--sky);"></i></div><div class="about-tech-name">GitHub Pages</div><div class="about-tech-desc">Free hosting &amp; deployment</div></div>
   </div>
   <div class="about-contact">
     <h3>Get in touch</h3>
@@ -1681,6 +1689,7 @@ function goPage(id){
       const next=document.getElementById('page-'+id);
       next.classList.add('active','page-enter');
       setTimeout(()=>next.classList.remove('page-enter'),300);
+      if(typeof lucide!=='undefined')lucide.createIcons();
       syncNav();
       window.scrollTo({top:0,behavior:'instant'});
     },180);
@@ -3163,6 +3172,7 @@ document.addEventListener('keydown',e=>{
 updatePerfDefaults();
 updateWBFields();
 renderFavStrips();
+lucide.createIcons();
 // Load airport DB in background — works when served via local server or GitHub Pages
 loadAirportDB();
 </script>
