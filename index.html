@@ -1255,7 +1255,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="page" id="page-airport">
 <div class="app">
   <div class="page-hero-wide">
-    <div class="phw-eyebrow">OurAirports · Live Weather</div>
+    <div class="phw-eyebrow">✦ Live Weather · Global Coverage</div>
     <h1 class="phw-title">Airport <span>Overview</span></h1>
     <p class="phw-sub">Full airport dashboard — live METAR, runway analysis, wind recommendation, and 3-hour weather trend. Search any of 85,000+ airports worldwide.</p>
     <div class="phw-tags">
@@ -1272,18 +1272,29 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
     <span class="fav-empty" id="ap-fav-empty">No favourites saved yet</span>
   </div>
 
-  <!-- Search bar -->
-  <div class="card" style="margin-bottom:14px;"><div class="card-body">
-    <div style="display:flex;gap:8px;align-items:center;">
-      <input class="field-input" id="ap-icao" type="text" placeholder="LRCL" maxlength="4"
-        style="width:110px;font-size:18px;text-align:center;letter-spacing:.12em;font-weight:700;"
-        oninput="this.value=this.value.toUpperCase()"
-        onkeydown="if(event.key==='Enter')lookupAirport()">
-      <button class="btn-primary" style="padding:10px 26px;font-size:12px;" onclick="lookupAirport()">Look Up</button>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.38;">Wind auto-detected from live METAR</span>
+  <!-- Search card -->
+  <div class="ap-search-card">
+    <div class="ap-search-inner">
+      <div class="ap-search-left">
+        <div class="ap-search-label">ICAO Code</div>
+        <input class="ap-search-input" id="ap-icao" type="text" placeholder="LRCL" maxlength="4"
+          oninput="this.value=this.value.toUpperCase()"
+          onkeydown="if(event.key==='Enter')lookupAirport()">
+        <div class="ap-search-hint">Try: EGLL &nbsp;·&nbsp; EDDM &nbsp;·&nbsp; EHAM &nbsp;·&nbsp; LRCL &nbsp;·&nbsp; KJFK</div>
+      </div>
+      <div class="ap-search-right">
+        <button class="ap-search-btn" onclick="lookupAirport()">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="white" stroke-width="1.6"/><path d="M10 10L14 14" stroke="white" stroke-width="1.6" stroke-linecap="round"/></svg>
+          Look Up Airport
+        </button>
+        <div class="ap-search-meta">
+          <span>📡 Live METAR fetched automatically</span>
+          <span>🛬 Wind → runway recommendation</span>
+          <span>📈 3-hour weather trend</span>
+        </div>
+      </div>
     </div>
-
-  </div></div>
+  </div>
 
   <div class="loading-bar" id="ap-loading"><div class="spinner"></div><div class="loading-text">Loading airport data<span class="loading-dots"></span></div></div>
   <div class="error-box" id="ap-error"></div>
@@ -2408,16 +2419,19 @@ async function lookupAirport(){
   hideErr('ap-error');
   document.getElementById('ap-result').style.display='none';
   document.getElementById('ap-loading').classList.add('show');
-
-  // Fetch live METAR in parallel with DB lookup
-  const [metarRaw]=await Promise.all([
-    fetchMetarRaw(icao,3),
-    new Promise(r=>setTimeout(r,100))
-  ]);
-
+  let metarRaw='';
+  try{
+    const results=await Promise.all([
+      fetchMetarRaw(icao,3),
+      new Promise(r=>setTimeout(r,100))
+    ]);
+    metarRaw=results[0]||'';
+  }catch(e){
+    metarRaw='';
+  }
   document.getElementById('ap-loading').classList.remove('show');
   const db=getAirportInfo(icao);
-  if(!db){showErr('ap-error',`Airport ${icao} not found. Make sure airports.csv is in the same folder.`);return;}
+  if(!db){showErr('ap-error',`Airport "${icao}" not found in the database. Check the ICAO code and try again.`);return;}
 
   // ── hasMetar — declare early so auto-wind can use it ──
   const hasMetar=metarRaw&&!metarRaw.includes('No METAR');
