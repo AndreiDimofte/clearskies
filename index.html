@@ -2383,7 +2383,7 @@ async function fetchMetarTrend(icao){
       const visStr=p.vis!=null?(p.vis>=9999?'10km+':p.vis+'m'):'—';
       const ceilStr=p.ceiling!=null?p.ceiling+'ft':(p.vis>=9999?'CAVOK':'—');
       const qnhStr=p.qnh?`${p.qnh.val}`:'—';
-      const qnhUnit2=p.qnh?p.qnh.unit:'hPa';
+      qnhUnit2=p.qnh?p.qnh.unit:'hPa';
       const isLatest=i===0;
       // Trend arrows vs previous entry
       const prev=parsed[i+1];
@@ -2444,6 +2444,7 @@ async function lookupAirport(){
 
   // ── hasMetar — declare early so auto-wind can use it ──
   const hasMetar=metarRaw&&!metarRaw.includes('No METAR');
+  let qnhUnit2='hPa'; // default, overwritten below if METAR parsed
 
   // Auto-fill wind from METAR if user left fields blank
   let windSource='manual';
