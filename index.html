@@ -1428,12 +1428,12 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="app">
   <div class="about-hero">
     <div class="about-hero-eyebrow">About ClearSkies</div>
-    <h1 class="about-hero-title">Built by a pilot student,<br><span class="grad">for pilots.</span></h1>
-    <p class="about-hero-sub">ClearSkies started as a personal project to solve a real frustration: aviation data is everywhere, but understanding it quickly is hard. METARs, NOTAMs, TAFs, ATC clearances — all in cryptic shorthand that takes years to decode fluently. This makes it instant.</p>
+    <h1 class="about-hero-title">Built by aviation enthusiasts,<br><span class="grad">for pilots.</span></h1>
+    <p class="about-hero-sub">ClearSkies started as a project to solve a real frustration: aviation data is everywhere, but understanding it quickly is hard. METARs, NOTAMs, TAFs, ATC clearances — all in cryptic shorthand that takes years to decode fluently. ClearSkies makes it instant.</p>
   </div>
   <div class="about-grid">
     <div class="about-card"><div class="about-card-icon">🎯</div><div class="about-card-title">The Mission</div><div class="about-card-body">Make aviation data accessible to everyone — from student pilots on their first solo to experienced captains who need a fast briefing. Plain English, structured output, zero confusion.</div></div>
-    <div class="about-card"><div class="about-card-icon">✈️</div><div class="about-card-title">The Story</div><div class="about-card-body">Built by a 3rd-year Automation &amp; Applied Informatics student at the Technical University of Cluj-Napoca, preparing for the Wizz Air Pilot Academy. Every feature solves a real problem from real flight training.</div></div>
+    <div class="about-card"><div class="about-card-icon">✈️</div><div class="about-card-title">The Story</div><div class="about-card-body">ClearSkies was built out of genuine frustration with how inaccessible aviation data is. Every feature comes from a real problem encountered in real flight training — nothing hypothetical, nothing added for show.</div></div>
     <div class="about-card"><div class="about-card-icon">🔬</div><div class="about-card-title">The Approach</div><div class="about-card-body">Structured data — wind, visibility, ceiling, QNH — is extracted with precise logic, never guessed. AI is used only where it genuinely helps: narrative summaries, theory explanations, clearance interpretation.</div></div>
     <div class="about-card"><div class="about-card-icon">🚀</div><div class="about-card-title">The Roadmap</div><div class="about-card-body">Go/No-Go assistant, live METAR trends, shareable briefing links, ATPL exam practice mode, and PWA support for offline use — all actively in development.</div></div>
   </div>
@@ -1621,11 +1621,12 @@ function toggleTheme(){
 }
 
 /* ══ OURAIRPORTS CSV ══ */
-let airportDB={},runwayDB={},dbLoaded=false,dbLoading=false;
+let airportDB={},runwayDB={},dbLoaded=false,_dbPromise=null;
 
 async function loadAirportDB(){
-  if(dbLoaded||dbLoading)return;
-  dbLoading=true;
+  if(dbLoaded)return;
+  if(_dbPromise)return _dbPromise;
+  _dbPromise=(async()=>{
   try{
     const [apRes,rwRes]=await Promise.all([fetch('./airports.csv'),fetch('./runways.csv')]);
     if(!apRes.ok||!rwRes.ok)throw new Error('CSV files not found');
@@ -1658,7 +1659,8 @@ async function loadAirportDB(){
     console.warn('OurAirports CSV not found, using fallback DB.',e.message);
     dbLoaded=true;
   }
-  dbLoading=false;
+  })();
+  return _dbPromise;
 }
 
 function csvLine(line){
@@ -1698,7 +1700,7 @@ function getAirportInfo(icao){
 function parseMetar(raw){
   const r=raw.toUpperCase().replace(/\n/g,' ');
   const p={wind:null,vis:null,ceiling:null,temp:null,dew:null,qnh:null,time:null};
-  const tm=r.match(/\b(\d{2})(\d{2})(\d{2})Z\b/);if(tm)p.time=`${tm[2]}:${tm[3]}Z`;
+  const tm=r.match(/\b(\d{2})(\d{2})(\d{2})Z\b/);if(tm)p.time=`${tm[2]}:${tm[3]}`;
   const wm=r.match(/\b(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?KT\b/);
   if(wm)p.wind={dir:wm[1]==='VRB'?'VRB':parseInt(wm[1]),spd:parseInt(wm[2]),gust:wm[3]?parseInt(wm[3]):null};
   // Vis — 4-digit metres
