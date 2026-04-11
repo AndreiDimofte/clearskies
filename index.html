@@ -695,7 +695,8 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
   .bottom-nav{display:block;}
   .page{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px));}
   .site-footer{margin-bottom:calc(60px + env(safe-area-inset-bottom,0px));}
-  nav .nav-links,.nav-hamburger{display:none!important;}
+  nav .nav-links,.nav-hamburger,.nav-brand svg{display:none!important;}
+  .mobile-menu{display:none!important;}
 }
 
 /* ── SUN CARD + CHARTS ── */
@@ -2843,69 +2844,123 @@ function exportDecoderPDF(){
   const fc=document.getElementById('badge-fc');
   const fcText=fc&&fc.style.display!=='none'?fc.textContent:'';
   const wxEmj=document.getElementById('wx-emoji')?.textContent||'';
+  const cpStatus=document.getElementById('cp-status')?.textContent||'';
 
-  // Collect sections from cp-sections
+  // Collect instrument strips HTML (wind, vis, ceiling, etc.)
+  const stripsHTML=document.getElementById('dynamic-strips')?.innerHTML||'';
+
+  // Collect decoded sections — correct class names: cp-sec-title + cp-sec-body
   const sections=[];
   document.querySelectorAll('#cp-sections .cp-section').forEach(s=>{
-    const head=s.querySelector('.cp-section-head')?.textContent||'';
-    const body=s.querySelector('.cp-section-body')?.innerHTML||'';
-    if(head)sections.push({head,body});
+    const head=s.querySelector('.cp-sec-title')?.textContent?.replace(/^[-–—]+\s*/,'').trim()||'';
+    const body=s.querySelector('.cp-sec-body')?.innerHTML||'';
+    if(body.trim())sections.push({head,body});
   });
 
-  // Also get instrument strips if present
-  const strips=document.getElementById('dynamic-strips')?.innerHTML||'';
-
   const prioColor=priority.toLowerCase().includes('high')?'#dc2626':priority.toLowerCase().includes('moderate')?'#d97706':'#059669';
+  const prioTextColor=priority.toLowerCase().includes('high')||priority.toLowerCase().includes('moderate')?'#fff':'#fff';
+
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-GB',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+  const timeStr=now.toUTCString().split(' ').slice(1,5).join(' ');
 
   const win=window.open('','_blank');
   win.document.write(`<!DOCTYPE html><html><head>
   <meta charset="UTF-8">
-  <title>ClearSkies — ${type} Briefing ${cpId}</title>
+  <title>ClearSkies · ${type} · ${cpId}</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;}
-    @page{margin:20mm 18mm;size:A4;}
-    body{font-family:'Helvetica Neue',Arial,sans-serif;background:#fff;color:#0f1923;font-size:11.5px;line-height:1.65;}
-    /* Header */
-    .cs-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;margin-bottom:20px;border-bottom:3px solid #0a2550;}
-    .cs-logo{font-size:22px;font-weight:900;color:#0a2550;letter-spacing:-.04em;}
-    .cs-logo span{color:#1a6cff;}
-    .cs-meta{text-align:right;font-size:9px;color:#888;line-height:1.5;}
-    /* Title row */
-    .cs-title-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
-    .cs-type-badge{padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.1em;background:#e0f0ff;color:#0a2550;border:1px solid #b0d4ff;}
-    .cs-prio-badge{padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;color:#fff;background:${prioColor};}
-    .cs-fc-badge{padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;background:#d1fae5;color:#065f46;}
-    .cs-id{font-family:'Courier New',monospace;font-size:9px;color:#aaa;margin-left:auto;}
-    /* Raw METAR */
-    .cs-raw{background:#f0f4ff;border-left:3px solid #1a6cff;border-radius:0 6px 6px 0;padding:10px 14px;font-family:'Courier New',monospace;font-size:10.5px;color:#1a3050;margin-bottom:18px;word-break:break-all;line-height:1.7;}
-    /* Sections */
-    .cs-section{margin-bottom:16px;break-inside:avoid;}
-    .cs-section-head{font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#1a6cff;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #dde8ff;}
-    .cs-section-body{font-size:11.5px;color:#1a1a2e;line-height:1.7;}
+    @page{margin:15mm 16mm 20mm;size:A4;}
+    body{font-family:'Helvetica Neue',Arial,sans-serif;background:#fff;color:#111827;font-size:11px;line-height:1.7;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+
+    /* ── HEADER ── */
+    .cs-header{display:grid;grid-template-columns:1fr auto;align-items:start;padding-bottom:12px;margin-bottom:0;border-bottom:3px solid #0a2550;}
+    .cs-logo-mark{display:flex;align-items:center;gap:8px;}
+    .cs-logo-icon{width:28px;height:28px;background:linear-gradient(135deg,#0a2550,#1a6cff);border-radius:7px;display:flex;align-items:center;justify-content:center;}
+    .cs-logo-icon svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;}
+    .cs-logo-text{font-size:20px;font-weight:900;color:#0a2550;letter-spacing:-.04em;line-height:1;}
+    .cs-logo-text span{color:#1a6cff;}
+    .cs-logo-sub{font-size:8px;color:#94a3b8;letter-spacing:.08em;text-transform:uppercase;margin-top:2px;}
+    .cs-meta{text-align:right;font-size:8.5px;color:#94a3b8;line-height:1.7;}
+    .cs-meta strong{color:#475569;font-size:9px;}
+
+    /* ── BRIEFING TITLE BAND ── */
+    .cs-title-band{background:#0a2550;margin:0 -16mm;padding:12px 16mm;display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+    .cs-type-pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;padding:3px 11px;border-radius:100px;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+    .cs-prio-pill{color:#fff;padding:3px 11px;border-radius:100px;font-size:9.5px;font-weight:700;background:${prioColor};}
+    .cs-fc-pill{padding:3px 11px;border-radius:100px;font-size:9.5px;font-weight:700;background:#10b981;color:#fff;}
+    .cs-title-id{margin-left:auto;font-family:'Courier New',monospace;font-size:8px;color:rgba(255,255,255,.4);}
+
+    /* ── RAW MESSAGE ── */
+    .cs-raw-wrap{background:#f8faff;border:1px solid #dbe4ff;border-radius:8px;margin-bottom:18px;overflow:hidden;}
+    .cs-raw-label{background:#dbe4ff;padding:4px 12px;font-size:7.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#3b5bdb;}
+    .cs-raw-text{padding:10px 14px;font-family:'Courier New',monospace;font-size:10.5px;color:#1e3a5f;word-break:break-all;line-height:1.8;}
+
+    /* ── SECTIONS ── */
+    .cs-section{margin-bottom:14px;break-inside:avoid;border:1px solid #e8eef8;border-radius:8px;overflow:hidden;}
+    .cs-section-head{background:#f0f5ff;padding:7px 14px;font-size:7.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#1d4ed8;border-bottom:1px solid #dbe4ff;display:flex;align-items:center;gap:6px;}
+    .cs-section-head::before{content:'';width:3px;height:12px;background:#1a6cff;border-radius:2px;flex-shrink:0;}
+    .cs-section-body{padding:10px 14px;font-size:11px;color:#1e293b;line-height:1.75;}
     .cs-section-body strong,.cs-section-body b{color:#0a2550;font-weight:700;}
-    .cs-section-body code{background:#f0f0f8;border:1px solid #ddd;border-radius:3px;padding:1px 4px;font-family:'Courier New',monospace;font-size:10px;}
-    /* Footer */
-    .cs-footer{position:fixed;bottom:0;left:0;right:0;padding:8px 18mm;border-top:1px solid #e0e0e0;display:flex;justify-content:space-between;font-size:8px;color:#bbb;background:#fff;}
-    .cs-disclaimer{margin-top:24px;padding:8px 12px;background:#fff8e1;border:1px solid #fcd34d;border-radius:6px;font-size:9px;color:#78350f;}
+    .cs-section-body code,.cs-section-body .gloss{background:#eff3ff;border:1px solid #c5d2f0;border-radius:3px;padding:1px 5px;font-family:'Courier New',monospace;font-size:9.5px;color:#1d4ed8;}
+    .cs-section-body em{font-style:normal;color:#dc2626;font-weight:600;}
+
+    /* ── DISCLAIMER ── */
+    .cs-disclaimer{margin-top:18px;padding:9px 13px;background:#fffbeb;border:1px solid #fcd34d;border-radius:7px;font-size:9px;color:#78350f;display:flex;gap:8px;align-items:flex-start;break-inside:avoid;}
+    .cs-disc-icon{flex-shrink:0;font-size:13px;line-height:1;}
+
+    /* ── FOOTER ── */
+    .cs-footer{position:fixed;bottom:0;left:0;right:0;padding:7px 16mm;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;font-size:7.5px;color:#94a3b8;background:#fff;}
+    .cs-footer-logo{font-weight:800;color:#0a2550;font-size:9px;letter-spacing:-.02em;}
+    .cs-footer-logo span{color:#1a6cff;}
   </style>
   </head><body>
+
   <div class="cs-header">
-    <div class="cs-logo">Clear<span>Skies</span><div style="font-size:9px;font-weight:400;color:#888;margin-top:2px;letter-spacing:.05em;">Aviation Intelligence Platform</div></div>
-    <div class="cs-meta">Generated ${new Date().toUTCString()}<br>theskycrate.com · ${cpId}</div>
+    <div class="cs-logo-mark">
+      <div class="cs-logo-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke-width="1.2"/><circle cx="8" cy="8" r="1.5" fill="white" stroke="none"/><path d="M8 8 L13 3" stroke-width="1.5"/></svg></div>
+      <div>
+        <div class="cs-logo-text">Clear<span>Skies</span></div>
+        <div class="cs-logo-sub">Aviation Intelligence Platform</div>
+      </div>
+    </div>
+    <div class="cs-meta">
+      <strong>${dateStr}</strong><br>
+      Generated ${timeStr} UTC<br>
+      theskycrate.com
+    </div>
   </div>
-  <div class="cs-title-row">
-    <span class="cs-type-badge">${type}</span>
-    ${priority?`<span class="cs-prio-badge">${priority}</span>`:''}
-    ${fcText?`<span class="cs-fc-badge">${fcText} ${wxEmj}</span>`:''}
-    <span class="cs-id">${cpLabel}</span>
+
+  <div class="cs-title-band">
+    <span class="cs-type-pill">${type}</span>
+    ${priority?`<span class="cs-prio-pill">${priority}</span>`:''}
+    ${fcText?`<span class="cs-fc-pill">${fcText} ${wxEmj}</span>`:''}
+    <span class="cs-title-id">${cpId}</span>
   </div>
-  <div class="cs-raw">${raw}</div>
-  ${sections.map(s=>`<div class="cs-section"><div class="cs-section-head">${s.head}</div><div class="cs-section-body">${s.body}</div></div>`).join('')}
-  <div class="cs-disclaimer">⚠ For planning reference only. Always verify with official sources before flight. ClearSkies AI briefings are advisory and not approved for operational use.</div>
-  <div class="cs-footer"><span>ClearSkies — theskycrate.com</span><span>${type} Briefing · ${cpId} · ${new Date().toLocaleDateString()}</span></div>
+
+  <div class="cs-raw-wrap">
+    <div class="cs-raw-label">Raw Input</div>
+    <div class="cs-raw-text">${raw}</div>
+  </div>
+
+  ${sections.length>0
+    ? sections.map(s=>`<div class="cs-section"><div class="cs-section-head">${s.head||'Summary'}</div><div class="cs-section-body">${s.body}</div></div>`).join('')
+    : `<div class="cs-section"><div class="cs-section-head">Decoded Briefing</div><div class="cs-section-body">Content not captured — please try exporting immediately after decoding.</div></div>`
+  }
+
+  <div class="cs-disclaimer">
+    <span class="cs-disc-icon">⚠</span>
+    <span>For planning reference only. Always verify with official sources before flight. ClearSkies AI briefings are advisory and not approved for operational use.</span>
+  </div>
+
+  <div class="cs-footer">
+    <span class="cs-footer-logo">Clear<span>Skies</span></span>
+    <span>${type} Briefing · ${cpId}</span>
+    <span>${dateStr}</span>
+  </div>
   </body></html>`);
   win.document.close();
-  setTimeout(()=>win.print(),600);
+  setTimeout(()=>win.print(),700);
 }
 /* ══ TOOLS ══ */
 function openTool(id){document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('show'));document.querySelectorAll('.tool-strip-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tool-'+id).classList.add('show');const sb=document.getElementById('ts-'+id);if(sb)sb.classList.add('active');document.getElementById('tool-'+id).scrollIntoView({behavior:'smooth',block:'nearest'});}
