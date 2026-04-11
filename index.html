@@ -1058,9 +1058,18 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <!-- TOOLS -->
 <div class="page" id="page-tools">
 <div class="app">
-  <div class="page-hero">
-    <h2>Aviation <span>Tools</span></h2>
-    <p>Professional calculators for pre-flight planning. Built for accuracy — from student pilots to airline operations.</p>
+  <div class="page-hero-wide">
+    <div class="phw-eyebrow">7 Calculators</div>
+    <h1 class="phw-title">Aviation <span>Tools</span></h1>
+    <p class="phw-sub">Professional calculators for pre-flight planning. Runway analysis, performance, weight &amp; balance, fuel, crosswind, density altitude, and unit conversion.</p>
+    <div class="phw-tags">
+      <span class="phw-tag sky">Runway Analysis</span>
+      <span class="phw-tag sky">T/O &amp; Landing Performance</span>
+      <span class="phw-tag sky">Weight &amp; Balance</span>
+      <span class="phw-tag sky">Fuel Planner</span>
+      <span class="phw-tag sky">Crosswind</span>
+      <span class="phw-tag sky">Density Altitude</span>
+    </div>
   </div>
 
   <!-- Tool selector strip -->
@@ -1435,7 +1444,15 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <!-- CHANGELOG -->
 <div class="page" id="page-changelog">
 <div class="app">
-  <div class="page-hero"><h2>Changelog &amp; <span>Roadmap</span></h2><p>What's been built, what's next.</p></div>
+  <div class="page-hero-wide">
+    <div class="phw-eyebrow">Version History</div>
+    <h1 class="phw-title">Changelog &amp; <span>Roadmap</span></h1>
+    <p class="phw-sub">Every fix, feature, and improvement — and what's coming next.</p>
+    <div class="phw-tags">
+      <span class="phw-tag sky">v0.9.2 Latest</span>
+      <span class="phw-tag">Started April 2026</span>
+    </div>
+  </div>
   <div class="card"><div class="card-body"><div class="changelog-list">
     <div class="cl-entry">
       <div><div class="cl-ver">v0.9.2</div><div class="cl-date">April 2026</div><div class="cl-latest">Latest</div></div>
@@ -2388,6 +2405,20 @@ async function lookupAirport(){
   const db=getAirportInfo(icao);
   if(!db){showErr('ap-error',`Airport ${icao} not found. Make sure airports.csv is in the same folder.`);return;}
 
+  // Auto-fill wind from METAR if user left fields blank
+  let windSource='manual';
+  if(wdir===null&&hasMetar){
+    const mp=parseMetar(metarRaw);
+    if(mp.wind&&mp.wind.dir!=='VRB'&&mp.wind.spd!=null){
+      wdir=mp.wind.dir;
+      wspd=mp.wind.spd;
+      windSource='metar';
+      // Update the input fields so user can see what was used
+      document.getElementById('ap-wdir').value=wdir;
+      document.getElementById('ap-wspd').value=wspd;
+    }
+  }
+
   // ── Hero card ──
   document.getElementById('ap-d-icao').textContent=icao;
   document.getElementById('ap-d-name').textContent=db.name||icao;
@@ -2442,6 +2473,19 @@ async function lookupAirport(){
   // ── Runways card ──
   const rwys=db.rwys||[];
   document.getElementById('ap-rwy-count').textContent=rwys.length?`${rwys.length} runway${rwys.length>1?'s':''}`:'' ;
+  // Show wind source badge in rwy header
+  const rwyHdr=document.querySelector('.ap-rwy-header');
+  if(rwyHdr){
+    const existing=rwyHdr.querySelector('.wind-source-note');
+    if(existing)existing.remove();
+    if(wdir!==null){
+      const note=document.createElement('span');
+      note.className='wind-source-note';
+      note.style.cssText='font-family:JetBrains Mono,monospace;font-size:7.5px;color:var(--text);opacity:.5;';
+      note.textContent=windSource==='metar'?`Wind from METAR: ${wdir}°/${wspd}kt`:`Wind: ${wdir}°/${wspd}kt`;
+      rwyHdr.appendChild(note);
+    }
+  }
 
   // Compute wind scores if wind provided
   let rwyScores={};
