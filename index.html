@@ -682,6 +682,35 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .ap-search-btn:hover{background-position:100%;}
 .ap-search-meta{display:flex;flex-direction:column;gap:5px;}
 .ap-search-meta span{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.45;letter-spacing:.02em;}
+
+/* ── MOBILE BOTTOM NAV ── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:400;background:var(--nav-bg);border-top:1px solid var(--border);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:0 0 env(safe-area-inset-bottom,0);}
+.bottom-nav-inner{display:flex;align-items:stretch;}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px 10px;cursor:pointer;border:none;background:none;color:var(--text);opacity:.5;transition:all .18s;font-family:'JetBrains Mono',monospace;font-size:6.5px;letter-spacing:.08em;text-transform:uppercase;min-height:54px;}
+.bn-item:hover{opacity:.8;}
+.bn-item.active{opacity:1;color:var(--sky);}
+.bn-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.bn-item.active svg{stroke:var(--sky);}
+@media(max-width:680px){
+  .bottom-nav{display:block;}
+  .page{padding-bottom:70px;}
+  nav .nav-links,.nav-hamburger{display:none!important;}
+}
+
+/* ── SUN CARD + CHARTS ── */
+.ap-sun-card{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.ap-charts-card{grid-column:1/-1;background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.ap-wx-unit{font-family:'JetBrains Mono',monospace;font-size:6.5px;color:var(--text);opacity:.35;margin-top:2px;letter-spacing:.1em;text-transform:uppercase;}
+.ap-sun-bar-wrap{flex:1;padding:0 0 4px;}
+.ap-sun-bar{position:relative;height:6px;background:var(--border);border-radius:3px;overflow:visible;}
+.ap-sun-bar-fill{position:absolute;left:0;top:0;height:100%;border-radius:3px;background:linear-gradient(90deg,#f97316,#fbbf24,#f97316);}
+.ap-sun-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:#fbbf24;border-radius:50%;box-shadow:0 0 8px rgba(251,191,36,.6);border:2px solid var(--surface);}
+.ap-chart-link{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--inset);border:1px solid var(--border);border-radius:9px;text-decoration:none;color:var(--text2);transition:all .18s;}
+.ap-chart-link:hover{border-color:var(--sky);background:var(--sky-dim);color:var(--text3);}
+.ap-chart-icon{font-size:18px;flex-shrink:0;}
+.ap-chart-name{font-size:13px;font-weight:600;color:var(--text3);margin-bottom:2px;}
+.ap-chart-desc{font-size:11px;color:var(--text);opacity:.6;}
+.ap-chart-arrow{margin-left:auto;font-size:14px;color:var(--sky);opacity:.6;flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -1314,6 +1343,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
           </div>
           <div class="ap-hero-right">
             <button class="ap-fav-large" id="ap-fav-btn" onclick="toggleFavourite()" title="Save to favourites">☆</button>
+          <button class="ap-fav-large" onclick="exportToPDF()" title="Export to PDF" style="font-size:14px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--text2);">PDF</button>
             <div class="ap-coords" id="ap-d-coords"></div>
           </div>
         </div>
@@ -1350,6 +1380,47 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
         <div class="ap-trend-body">
           <div id="ap-trend-loading" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.4;">Fetching trend data…</div>
           <div id="ap-trend-content"></div>
+        </div>
+      </div>
+
+      <!-- Sun times + Charts row -->
+      <div class="ap-sun-card">
+        <div class="ap-trend-header">
+          <span class="ap-trend-title">☀ Sunrise &amp; Sunset</span>
+          <span id="ap-sun-date" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;"></span>
+        </div>
+        <div class="ap-trend-body" id="ap-sun-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div class="ap-wx-item"><div class="ap-wx-label">Sunrise</div><div class="ap-wx-val" id="ap-sunrise" style="font-size:16px;">—</div><div class="ap-wx-unit">UTC</div></div>
+          <div class="ap-wx-item"><div class="ap-wx-label">Solar Noon</div><div class="ap-wx-val" id="ap-noon" style="font-size:16px;">—</div><div class="ap-wx-unit">UTC</div></div>
+          <div class="ap-wx-item"><div class="ap-wx-label">Sunset</div><div class="ap-wx-val" id="ap-sunset" style="font-size:16px;">—</div><div class="ap-wx-unit">UTC</div></div>
+        </div>
+        <div style="padding:0 16px 14px;display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="ap-sun-bar-wrap"><div class="ap-sun-bar"><div class="ap-sun-bar-fill" id="ap-sun-bar-fill"></div><div class="ap-sun-dot" id="ap-sun-dot"></div></div><div id="ap-day-length" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;margin-top:6px;"></div></div>
+        </div>
+      </div>
+
+      <!-- Charts links -->
+      <div class="ap-charts-card">
+        <div class="ap-trend-header">
+          <span class="ap-trend-title">📋 Charts</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;">External links</span>
+        </div>
+        <div class="ap-trend-body" style="display:flex;flex-direction:column;gap:8px;">
+          <a class="ap-chart-link" id="ap-chart-chartfox" href="#" target="_blank" rel="noopener">
+            <span class="ap-chart-icon">🗺</span>
+            <div><div class="ap-chart-name">ChartFox</div><div class="ap-chart-desc">Approach plates, SIDs, STARs, airport diagrams</div></div>
+            <span class="ap-chart-arrow">↗</span>
+          </a>
+          <a class="ap-chart-link" id="ap-chart-skyvector" href="#" target="_blank" rel="noopener">
+            <span class="ap-chart-icon">✈</span>
+            <div><div class="ap-chart-name">SkyVector</div><div class="ap-chart-desc">VFR sectionals, IFR enroute charts</div></div>
+            <span class="ap-chart-arrow">↗</span>
+          </a>
+          <a class="ap-chart-link" id="ap-chart-ourairports" href="#" target="_blank" rel="noopener">
+            <span class="ap-chart-icon">📡</span>
+            <div><div class="ap-chart-name">Airport Info Page</div><div class="ap-chart-desc">Frequencies, FBO, additional data</div></div>
+            <span class="ap-chart-arrow">↗</span>
+          </a>
         </div>
       </div>
 
@@ -1593,6 +1664,14 @@ document.querySelectorAll('.reveal').forEach(el=>
 const PAGES=['home','decoder','route','atpl','tools','airport','pricing','about','changelog'];
 function goPage(id){
   const current=document.querySelector('.page.active');
+  function syncNav(){
+    PAGES.forEach(p=>{
+      const nl=document.getElementById('nl-'+p);
+      if(nl)nl.classList.toggle('active',p===id);
+      const bn=document.getElementById('bn-'+p);
+      if(bn)bn.classList.toggle('active',p===id);
+    });
+  }
   if(current&&current.id!=='page-'+id){
     current.classList.add('page-exit');
     setTimeout(()=>{
@@ -1600,15 +1679,12 @@ function goPage(id){
       const next=document.getElementById('page-'+id);
       next.classList.add('active','page-enter');
       setTimeout(()=>next.classList.remove('page-enter'),300);
-      PAGES.forEach(p=>{
-        const nl=document.getElementById('nl-'+p);
-        if(nl)nl.classList.toggle('active',p===id);
-      });
+      syncNav();
       window.scrollTo({top:0,behavior:'instant'});
     },180);
   } else if(!current){
     document.getElementById('page-'+id).classList.add('active');
-    PAGES.forEach(p=>{const nl=document.getElementById('nl-'+p);if(nl)nl.classList.toggle('active',p===id);});
+    syncNav();
   }
 }
 function toggleMobileMenu(){document.getElementById('mobile-menu').classList.toggle('open');}
@@ -2486,7 +2562,7 @@ async function lookupAirport(){
     const visStr=p.vis!=null?(p.vis>=9999?'10km+':p.vis+'m'):'—';
     const ceilStr=p.ceiling!=null?p.ceiling+'ft':(p.vis>=9999?'CAVOK':'—');
     const tempStr=p.temp!=null?`${p.temp}°/${p.dew}°`:'—';
-    const qnhStr=p.qnh?p.qnh.display||(p.qnh.val+' hPa'):'—';
+    const qnhStr=p.qnh?`${p.qnh.val}`:'—';
     const wxE=wxEmoji(metarRaw);
 
     document.getElementById('ap-wx-grid').innerHTML=`
@@ -2595,10 +2671,164 @@ async function lookupAirport(){
   _currentApIcao=icao;
   renderFavBtn(icao);
 
-  // Trend (already have 3h data from initial fetch — pass it directly)
+  // Sun times + chart links
+  if(db.lat&&db.lng){
+    renderSunTimes(db.lat,db.lng);
+    document.getElementById('ap-sun-body').style.display='grid';
+  } else {
+    document.getElementById('ap-sun-body').style.display='none';
+  }
+  updateChartLinks(icao,db.name);
+
+  // Trend
   fetchMetarTrendFromRaw(icao,metarRaw,hasMetar);
 }
 
+
+/* ══ SUNRISE / SUNSET ══ */
+function calcSunTimes(lat,lng){
+  // Accurate sunrise/sunset using NOAA algorithm
+  const now=new Date();
+  const J=now.getTime()/86400000+2440587.5;
+  const n=Math.ceil(J-2451545-0.0009-lng/360);
+  const Js=2451545+0.0009+lng/360+n;
+  const M=(357.5291+0.98560028*(Js-2451545))%360;
+  const Mr=M*Math.PI/180;
+  const C=1.9148*Math.sin(Mr)+0.02*Math.sin(2*Mr)+0.0003*Math.sin(3*Mr);
+  const lam=(M+C+180+102.9372)%360;
+  const Jt=Js+0.0053*Math.sin(Mr)-0.0069*Math.sin(2*lam*Math.PI/180);
+  const d=Math.asin(Math.sin(-23.4397*Math.PI/180)*Math.cos((lam+180)*Math.PI/180));
+  const cos_w0=(Math.sin(-0.8333*Math.PI/180)-Math.sin(lat*Math.PI/180)*Math.sin(d))/(Math.cos(lat*Math.PI/180)*Math.cos(d));
+  if(cos_w0<-1)return null; // polar day
+  if(cos_w0>1)return null;  // polar night
+  const w0=Math.acos(cos_w0)*180/Math.PI;
+  const Jrise=Jt-w0/360;
+  const Jset=Jt+w0/360;
+  const jdToUTC=jd=>{
+    const ms=(jd-2440587.5)*86400000;
+    const d=new Date(ms);
+    return `${String(d.getUTCHours()).padStart(2,'0')}:${String(d.getUTCMinutes()).padStart(2,'0')}`;
+  };
+  const noon=new Date((Jt-2440587.5)*86400000);
+  const noonStr=`${String(noon.getUTCHours()).padStart(2,'0')}:${String(noon.getUTCMinutes()).padStart(2,'0')}`;
+  const dayMinutes=w0*2/360*24*60;
+  const dayH=Math.floor(dayMinutes/60),dayM=Math.round(dayMinutes%60);
+  // Progress: where is sun now relative to day
+  const nowJ=new Date().getTime()/86400000+2440587.5;
+  const pct=Math.max(0,Math.min(1,(nowJ-Jrise)/(Jset-Jrise)));
+  return{sunrise:jdToUTC(Jrise),sunset:jdToUTC(Jset),noon:noonStr,dayLength:`${dayH}h ${dayM}m of daylight`,pct};
+}
+
+function renderSunTimes(lat,lng){
+  const sun=calcSunTimes(lat,lng);
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('ap-sun-date').textContent=today;
+  if(!sun){
+    document.getElementById('ap-sunrise').textContent='N/A';
+    document.getElementById('ap-noon').textContent='N/A';
+    document.getElementById('ap-sunset').textContent='N/A';
+    return;
+  }
+  document.getElementById('ap-sunrise').textContent=sun.sunrise;
+  document.getElementById('ap-noon').textContent=sun.noon;
+  document.getElementById('ap-sunset').textContent=sun.sunset;
+  document.getElementById('ap-day-length').textContent=sun.dayLength;
+  const fill=document.getElementById('ap-sun-bar-fill');
+  const dot=document.getElementById('ap-sun-dot');
+  if(fill&&dot){
+    fill.style.width=(sun.pct*100)+'%';
+    dot.style.left=(sun.pct*100)+'%';
+  }
+}
+
+function updateChartLinks(icao,name){
+  const cf=document.getElementById('ap-chart-chartfox');
+  const sv=document.getElementById('ap-chart-skyvector');
+  const oa=document.getElementById('ap-chart-ourairports');
+  if(cf)cf.href=`https://chartfox.org/${icao}`;
+  if(sv)sv.href=`https://skyvector.com/airport/${icao}`;
+  if(oa)oa.href=`https://ourairports.com/airports/${icao}/`;
+}
+
+/* ══ PDF EXPORT ══ */
+function exportToPDF(){
+  const icao=_currentApIcao||'Airport';
+  const result=document.getElementById('ap-result');
+  if(!result||result.style.display==='none'){alert('Look up an airport first.');return;}
+  // Build a clean HTML document for printing
+  const name=document.getElementById('ap-d-name')?.textContent||icao;
+  const city=document.getElementById('ap-d-city')?.textContent||'';
+  const metar=document.getElementById('ap-metar-raw')?.textContent||'—';
+  const time=document.getElementById('ap-metar-time')?.textContent||'';
+  const sunrise=document.getElementById('ap-sunrise')?.textContent||'—';
+  const sunset=document.getElementById('ap-sunset')?.textContent||'—';
+  const dayLen=document.getElementById('ap-day-length')?.textContent||'';
+  const trendRows=document.getElementById('ap-trend-content')?.innerHTML||'';
+  const rwyBody=document.getElementById('ap-rwy-body')?.innerHTML||'';
+
+  const win=window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><title>ClearSkies — ${icao} Briefing</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Helvetica Neue',Arial,sans-serif;background:#fff;color:#111;padding:32px;font-size:12px;line-height:1.6;}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0a2550;padding-bottom:16px;margin-bottom:24px;}
+    .logo{font-weight:800;font-size:18px;color:#0a2550;letter-spacing:-.03em;}
+    .logo span{color:#1a6cff;}
+    .meta{text-align:right;font-size:10px;color:#666;}
+    .icao{font-size:48px;font-weight:800;color:#0a2550;letter-spacing:-.03em;line-height:1;}
+    .ap-name{font-size:18px;font-weight:700;color:#111;margin:4px 0 2px;}
+    .ap-city{font-size:13px;color:#555;}
+    h3{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#1a6cff;margin:20px 0 8px;padding-bottom:4px;border-bottom:1px solid #e0e8ff;}
+    .metar{font-family:'Courier New',monospace;font-size:11px;background:#f4f7ff;border:1px solid #d0dcff;border-radius:6px;padding:10px 12px;margin-bottom:12px;color:#222;word-break:break-all;}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+    .data-cell{background:#f8f9ff;border:1px solid #e8eeff;border-radius:6px;padding:10px;text-align:center;}
+    .data-label{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-bottom:3px;}
+    .data-val{font-size:16px;font-weight:700;color:#0a2550;}
+    .rwy{background:#f8f9ff;border:1px solid #e8eeff;border-radius:6px;padding:10px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+    .rwy-id{font-size:16px;font-weight:700;color:#0a2550;}
+    .footer{margin-top:32px;padding-top:12px;border-top:1px solid #e0e0e0;font-size:8px;color:#aaa;display:flex;justify-content:space-between;}
+    .badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:9px;font-weight:700;}
+    .vfr{background:#d1fae5;color:#065f46;}.mvfr{background:#dbeafe;color:#1e40af;}.ifr{background:#fee2e2;color:#991b1b;}.lifr{background:#ede9fe;color:#5b21b6;}
+  </style></head><body>
+  <div class="header">
+    <div><div class="logo">Clear<span>Skies</span></div><div style="font-size:9px;color:#888;margin-top:3px;">Aviation Intelligence Platform</div></div>
+    <div class="meta">Generated ${new Date().toUTCString()}<br>theskycrate.com</div>
+  </div>
+  <div class="icao">${icao}</div>
+  <div class="ap-name">${name}</div>
+  <div class="ap-city">${city}</div>
+  <h3>Live Weather — ${time} UTC</h3>
+  <div class="metar">${metar}</div>
+  <h3>Sun Times (UTC)</h3>
+  <div class="grid3" style="margin-bottom:16px;">
+    <div class="data-cell"><div class="data-label">Sunrise</div><div class="data-val">${sunrise}</div></div>
+    <div class="data-cell"><div class="data-label">Sunset</div><div class="data-val">${sunset}</div></div>
+    <div class="data-cell"><div class="data-label">Day Length</div><div class="data-val" style="font-size:13px;">${dayLen}</div></div>
+  </div>
+  <h3>Runways</h3>
+  <div style="margin-bottom:16px;" id="rwy-pdf-placeholder"></div>
+  <h3>Weather Trend</h3>
+  <p style="font-size:10px;color:#555;">See trend data on theskycrate.com for the latest observations.</p>
+  <div class="footer"><span>ClearSkies — For planning reference only. Always consult official sources.</span><span>${icao} Airport Briefing</span></div>
+  </body></html>`);
+  win.document.close();
+  // Fill runway data from live DOM
+  const rwyEl=win.document.getElementById('rwy-pdf-placeholder');
+  if(rwyEl){
+    const rwys=document.querySelectorAll('.ap-rwy-item');
+    rwys.forEach(r=>{
+      const id=r.querySelector('.ap-rwy-id-big')?.textContent||'';
+      const len=r.querySelector('.ap-rwy-len')?.textContent||'';
+      const badge=r.querySelector('.ap-rwy-rec-badge')?.textContent||'';
+      const div=win.document.createElement('div');
+      div.className='rwy';
+      div.innerHTML=`<span class="rwy-id">${id}</span><span style="font-size:11px;color:#555;">${len}</span>${badge?`<span class="badge">${badge}</span>`:''}`;
+      rwyEl.appendChild(div);
+    });
+  }
+  setTimeout(()=>win.print(),500);
+}
 /* ══ TOOLS ══ */
 function openTool(id){document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('show'));document.querySelectorAll('.tool-strip-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tool-'+id).classList.add('show');const sb=document.getElementById('ts-'+id);if(sb)sb.classList.add('active');document.getElementById('tool-'+id).scrollIntoView({behavior:'smooth',block:'nearest'});}
 
@@ -2803,5 +3033,31 @@ renderFavStrips();
 // Load airport DB in background — works when served via local server or GitHub Pages
 loadAirportDB();
 </script>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bn-item active" id="bn-home" onclick="goPage('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      Home
+    </button>
+    <button class="bn-item" id="bn-decoder" onclick="goPage('decoder')">
+      <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 12h5M8 15h3"/></svg>
+      Decoder
+    </button>
+    <button class="bn-item" id="bn-airport" onclick="goPage('airport')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8"/></svg>
+      Airport
+    </button>
+    <button class="bn-item" id="bn-tools" onclick="goPage('tools')">
+      <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3-3a6 6 0 01-7 7l-5.9 5.9a2.1 2.1 0 01-3-3L11 11a6 6 0 017-7z"/></svg>
+      Tools
+    </button>
+    <button class="bn-item" id="bn-route" onclick="goPage('route')">
+      <svg viewBox="0 0 24 24"><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M6 16v-3a6 6 0 016-6h2"/><path d="M14 6l4 4-4 4"/></svg>
+      Route
+    </button>
+  </div>
+</nav>
 </body>
 </html>
