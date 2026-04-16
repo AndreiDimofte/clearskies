@@ -118,9 +118,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:var(--nav-bg);bor
 .sv-section{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:5px;}
 .sv-sec-title{font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);opacity:.7;margin-bottom:3px;}
 .sv-sec-body{font-size:10px;color:var(--text2);line-height:1.6;}
-.cta-section{background:linear-gradient(135deg,rgba(26,108,255,.07),rgba(56,189,248,.07));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:68px 22px;text-align:center;}
-.cta-section h2{font-size:clamp(22px,3.8vw,38px);font-weight:800;color:var(--text3);letter-spacing:-.03em;margin-bottom:11px;}
-.cta-section p{font-size:14px;color:var(--text);max-width:440px;margin:0 auto 28px;line-height:1.68;}
+.cta-section{background:linear-gradient(135deg,rgba(26,108,255,.07),rgba(56,189,248,.07));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:68px 22px;}
+.cta-section h2{font-size:clamp(22px,3.8vw,38px);font-weight:800;color:var(--text3);letter-spacing:-.03em;margin-bottom:11px;text-align:inherit;}
+.cta-section p{font-size:14px;color:var(--text);max-width:440px;margin:0 0 28px;line-height:1.68;text-align:inherit;}
 
 /* SHARED */
 .page-hero{margin-bottom:26px;padding-top:8px;}
@@ -724,8 +724,8 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .icon-xl[data-lucide]{width:28px;height:28px;}
 
 /* ── AUTH OVERLAY ── */
-.auth-overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:20px;}
-.auth-overlay.hidden{display:none;}
+.auth-overlay{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:20px;}
+.auth-overlay.visible{display:flex;}
 .auth-card{width:100%;max-width:400px;background:var(--panel-bg);border:1px solid var(--border2);border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6);}
 .auth-card-header{padding:28px 28px 0;}
 .auth-logo{display:flex;align-items:center;gap:9px;margin-bottom:22px;}
@@ -810,6 +810,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="auth-overlay" id="auth-overlay">
   <div class="auth-card">
     <div class="auth-card-header">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:-8px;"><button onclick="hideAuthOverlay()" style="background:none;border:none;color:var(--text);opacity:.4;font-size:20px;cursor:pointer;padding:0;line-height:1;transition:opacity .15s;" onmouseover="this.style.opacity=.9" onmouseout="this.style.opacity=.4" title="Close">✕</button></div>
       <div class="auth-logo">
         <div class="auth-logo-icon">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/><path d="M12 12 L19 5" stroke-width="2"/></svg>
@@ -1814,7 +1815,7 @@ let _authTab = 'signin';
 /* ── Show/hide auth overlay ── */
 function showAuthOverlay(forFeature){
   const overlay=document.getElementById('auth-overlay');
-  overlay.classList.remove('hidden');
+  overlay.classList.add('visible');
   if(forFeature){
     document.getElementById('auth-title').textContent='Sign in to continue';
     document.getElementById('auth-sub').textContent=`${forFeature} requires a free ClearSkies account.`;
@@ -1823,8 +1824,14 @@ function showAuthOverlay(forFeature){
     document.getElementById('auth-sub').textContent='Sign in to access the full ClearSkies platform.';
   }
 }
-function hideAuthOverlay(){ document.getElementById('auth-overlay').classList.add('hidden'); }
+function hideAuthOverlay(){ document.getElementById('auth-overlay').classList.remove('visible'); }
 function dismissAuthOverlay(){ hideAuthOverlay(); }
+// Close on overlay click (outside card) or Escape key
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') hideAuthOverlay(); });
+window.addEventListener('load',()=>{
+  const ov=document.getElementById('auth-overlay');
+  if(ov) ov.addEventListener('click',e=>{ if(e.target===ov) hideAuthOverlay(); });
+});
 
 /* ── Tab switch ── */
 function authShowTab(tab){
@@ -1919,7 +1926,7 @@ async function authSignOut(){
   _currentSession = null;
   updateUserNav(null);
   closeUserDropdown();
-  showAuthOverlay();
+  syncCtaState();
   document.getElementById('auth-email').value = '';
   document.getElementById('auth-password').value = '';
   document.getElementById('auth-confirm').value = '';
@@ -1962,7 +1969,7 @@ async function initAuth(){
       _currentSession = null;
       _currentUser = null;
       updateUserNav(null);
-      showAuthOverlay();
+      syncCtaState();
     } else if(event === 'TOKEN_REFRESHED' && session){
       _currentSession = session;
     }
@@ -3238,137 +3245,6 @@ function exportToPDF(){
     .vfr{background:#d1fae5;color:#065f46;}.mvfr{background:#dbeafe;color:#1e40af;}.ifr{background:#fee2e2;color:#991b1b;}.lifr{background:#ede9fe;color:#5b21b6;}
   </style></head><body>
 
-<!-- AUTH OVERLAY -->
-<div class="auth-overlay" id="auth-overlay">
-  <div class="auth-card">
-    <div class="auth-card-header">
-      <div class="auth-logo">
-        <div class="auth-logo-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/><path d="M12 12 L19 5" stroke-width="2"/></svg>
-        </div>
-        <div class="auth-logo-name">Clear<span>Skies</span></div>
-      </div>
-      <div class="auth-title" id="auth-title">Welcome back</div>
-      <div class="auth-sub" id="auth-sub">Sign in to access the full ClearSkies platform.</div>
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-signin" onclick="authShowTab('signin')">Sign In</button>
-        <button class="auth-tab" id="tab-signup" onclick="authShowTab('signup')">Create Account</button>
-      </div>
-    </div>
-    <div class="auth-body">
-      <div class="auth-error" id="auth-error"></div>
-      <div class="auth-success" id="auth-success"></div>
-      <div class="auth-field">
-        <label class="auth-label">Email address</label>
-        <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <div class="auth-field">
-        <label class="auth-label" id="auth-pass-label">Password</label>
-        <input class="auth-input" id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <div class="auth-field" id="auth-confirm-wrap" style="display:none;">
-        <label class="auth-label">Confirm Password</label>
-        <input class="auth-input" id="auth-confirm" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <button class="auth-submit" id="auth-submit-btn" onclick="authSubmit()">Sign In</button>
-      <div class="auth-footer-note">By signing in you agree to use ClearSkies for planning reference only.<br>Not for operational flight use.</div>
-    </div>
-  </div>
-</div>
-  <div class="header">
-    <div><div class="logo">Clear<span>Skies</span></div><div style="font-size:9px;color:#888;margin-top:3px;">Aviation Intelligence Platform</div></div>
-    <div class="meta">Generated ${new Date().toUTCString()}<br>theskycrate.com</div>
-  </div>
-  <div class="icao">${icao}</div>
-  <div class="ap-name">${name}</div>
-  <div class="ap-city">${city}</div>
-  <h3>Live Weather — ${time} UTC</h3>
-  <div class="metar">${metar}</div>
-  <h3>Sun Times (UTC)</h3>
-  <div class="grid3" style="margin-bottom:16px;">
-    <div class="data-cell"><div class="data-label">Sunrise</div><div class="data-val">${sunrise}</div></div>
-    <div class="data-cell"><div class="data-label">Sunset</div><div class="data-val">${sunset}</div></div>
-    <div class="data-cell"><div class="data-label">Day Length</div><div class="data-val" style="font-size:13px;">${dayLen}</div></div>
-  </div>
-  <h3>Runways</h3>
-  <div style="margin-bottom:16px;" id="rwy-pdf-placeholder"></div>
-  <h3>Weather Trend</h3>
-  <p style="font-size:10px;color:#555;">See trend data on theskycrate.com for the latest observations.</p>
-  <div class="footer"><span>ClearSkies — For planning reference only. Always consult official sources.</span><span>${icao} Airport Briefing</span></div>
-  
-<!-- MY ACCOUNT -->
-<div class="page" id="page-account">
-<div class="app">
-  <div class="page-hero-wide">
-    <div class="phw-eyebrow">Your Profile</div>
-    <h1 class="phw-title">My <span>Account</span></h1>
-    <p class="phw-sub">Your favourites, recent decodes, and account settings.</p>
-  </div>
-
-  <!-- Not signed in state -->
-  <div id="account-guest" style="display:none;">
-    <div class="card"><div class="card-body" style="text-align:center;padding:40px 20px;">
-      <i data-lucide="user" style="width:40px;height:40px;stroke:var(--text);opacity:.3;margin-bottom:16px;"></i>
-      <div style="font-size:15px;font-weight:700;color:var(--text3);margin-bottom:8px;">You're not signed in</div>
-      <div style="font-size:13px;color:var(--text);margin-bottom:20px;">Sign in to save favourites and see your decode history.</div>
-      <button class="btn-primary" onclick="showAuthOverlay('My Account')">Sign In</button>
-    </div></div>
-  </div>
-
-  <!-- Signed in state -->
-  <div id="account-main" style="display:none;">
-
-    <!-- User card -->
-    <div class="card" style="margin-bottom:14px;"><div class="card-body">
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#0a2550,#1a6cff);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;" id="acct-avatar">?</div>
-        <div style="flex:1;">
-          <div style="font-size:16px;font-weight:700;color:var(--text3);margin-bottom:3px;" id="acct-email">—</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.5;" id="acct-plan">Free Plan</div>
-        </div>
-        <button class="btn-primary" onclick="goPage('pricing')" style="font-size:11px;padding:8px 16px;">
-          <i data-lucide="crown" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Upgrade
-        </button>
-      </div>
-    </div></div>
-
-    <!-- Favourites -->
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-header">
-        <span class="card-title"><i data-lucide="star" style="width:14px;height:14px;margin-right:6px;stroke:var(--amber);"></i>Favourite Airports</span>
-        <span id="acct-fav-count" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;"></span>
-      </div>
-      <div class="card-body" id="acct-favs">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.35;">No favourites saved yet. Look up an airport and tap ☆ to save it.</div>
-      </div>
-    </div>
-
-    <!-- Recent decodes -->
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-header">
-        <span class="card-title"><i data-lucide="history" style="width:14px;height:14px;margin-right:6px;stroke:var(--sky);"></i>Recent Decodes</span>
-        <button onclick="clearRecentDecodes()" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;background:none;border:none;cursor:pointer;">Clear all</button>
-      </div>
-      <div class="card-body" id="acct-recent">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.35;">No recent decodes yet. Paste a METAR or NOTAM in the Decoder to get started.</div>
-      </div>
-    </div>
-
-    <!-- Account actions -->
-    <div class="card">
-      <div class="card-header"><span class="card-title">Account</span></div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
-        <button onclick="authSignOut()" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--inset);border:1px solid var(--border);border-radius:9px;color:var(--text2);cursor:pointer;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;transition:all .18s;width:100%;text-align:left;" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
-          <i data-lucide="log-out" style="width:15px;height:15px;stroke:#f87171;"></i>
-          <div><div style="font-weight:600;color:#f87171;">Sign Out</div><div style="font-size:11px;color:var(--text);opacity:.5;margin-top:1px;">You'll need to sign in again to use AI features</div></div>
-        </button>
-      </div>
-    </div>
-
-  </div>
-</div>
-</div>
-
 </body></html>`);
   win.document.close();
   // Fill runway data from live DOM
@@ -3471,44 +3347,6 @@ function exportDecoderPDF(){
   </style>
   </head><body>
 
-<!-- AUTH OVERLAY -->
-<div class="auth-overlay" id="auth-overlay">
-  <div class="auth-card">
-    <div class="auth-card-header">
-      <div class="auth-logo">
-        <div class="auth-logo-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/><path d="M12 12 L19 5" stroke-width="2"/></svg>
-        </div>
-        <div class="auth-logo-name">Clear<span>Skies</span></div>
-      </div>
-      <div class="auth-title" id="auth-title">Welcome back</div>
-      <div class="auth-sub" id="auth-sub">Sign in to access the full ClearSkies platform.</div>
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-signin" onclick="authShowTab('signin')">Sign In</button>
-        <button class="auth-tab" id="tab-signup" onclick="authShowTab('signup')">Create Account</button>
-      </div>
-    </div>
-    <div class="auth-body">
-      <div class="auth-error" id="auth-error"></div>
-      <div class="auth-success" id="auth-success"></div>
-      <div class="auth-field">
-        <label class="auth-label">Email address</label>
-        <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <div class="auth-field">
-        <label class="auth-label" id="auth-pass-label">Password</label>
-        <input class="auth-input" id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <div class="auth-field" id="auth-confirm-wrap" style="display:none;">
-        <label class="auth-label">Confirm Password</label>
-        <input class="auth-input" id="auth-confirm" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
-      </div>
-      <button class="auth-submit" id="auth-submit-btn" onclick="authSubmit()">Sign In</button>
-      <div class="auth-footer-note">By signing in you agree to use ClearSkies for planning reference only.<br>Not for operational flight use.</div>
-    </div>
-  </div>
-</div>
-
   <div class="cs-header">
     <div class="cs-logo-mark">
       <div class="cs-logo-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke-width="1.2"/><circle cx="8" cy="8" r="1.5" fill="white" stroke="none"/><path d="M8 8 L13 3" stroke-width="1.5"/></svg></div>
@@ -3562,7 +3400,7 @@ function exportDecoderPDF(){
   </div>
 
   <!-- Not signed in state -->
-  <div id="account-guest" style="display:none;">
+  <div id="account-guest" style="display:block;">
     <div class="card"><div class="card-body" style="text-align:center;padding:40px 20px;">
       <i data-lucide="user" style="width:40px;height:40px;stroke:var(--text);opacity:.3;margin-bottom:16px;"></i>
       <div style="font-size:15px;font-weight:700;color:var(--text3);margin-bottom:8px;">You're not signed in</div>
@@ -3958,79 +3796,6 @@ loadAirportDB();
     </button>
   </div>
 </nav>
-
-<!-- MY ACCOUNT -->
-<div class="page" id="page-account">
-<div class="app">
-  <div class="page-hero-wide">
-    <div class="phw-eyebrow">Your Profile</div>
-    <h1 class="phw-title">My <span>Account</span></h1>
-    <p class="phw-sub">Your favourites, recent decodes, and account settings.</p>
-  </div>
-
-  <!-- Not signed in state -->
-  <div id="account-guest" style="display:none;">
-    <div class="card"><div class="card-body" style="text-align:center;padding:40px 20px;">
-      <i data-lucide="user" style="width:40px;height:40px;stroke:var(--text);opacity:.3;margin-bottom:16px;"></i>
-      <div style="font-size:15px;font-weight:700;color:var(--text3);margin-bottom:8px;">You're not signed in</div>
-      <div style="font-size:13px;color:var(--text);margin-bottom:20px;">Sign in to save favourites and see your decode history.</div>
-      <button class="btn-primary" onclick="showAuthOverlay('My Account')">Sign In</button>
-    </div></div>
-  </div>
-
-  <!-- Signed in state -->
-  <div id="account-main" style="display:none;">
-
-    <!-- User card -->
-    <div class="card" style="margin-bottom:14px;"><div class="card-body">
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#0a2550,#1a6cff);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;" id="acct-avatar">?</div>
-        <div style="flex:1;">
-          <div style="font-size:16px;font-weight:700;color:var(--text3);margin-bottom:3px;" id="acct-email">—</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.5;" id="acct-plan">Free Plan</div>
-        </div>
-        <button class="btn-primary" onclick="goPage('pricing')" style="font-size:11px;padding:8px 16px;">
-          <i data-lucide="crown" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Upgrade
-        </button>
-      </div>
-    </div></div>
-
-    <!-- Favourites -->
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-header">
-        <span class="card-title"><i data-lucide="star" style="width:14px;height:14px;margin-right:6px;stroke:var(--amber);"></i>Favourite Airports</span>
-        <span id="acct-fav-count" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;"></span>
-      </div>
-      <div class="card-body" id="acct-favs">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.35;">No favourites saved yet. Look up an airport and tap ☆ to save it.</div>
-      </div>
-    </div>
-
-    <!-- Recent decodes -->
-    <div class="card" style="margin-bottom:14px;">
-      <div class="card-header">
-        <span class="card-title"><i data-lucide="history" style="width:14px;height:14px;margin-right:6px;stroke:var(--sky);"></i>Recent Decodes</span>
-        <button onclick="clearRecentDecodes()" style="font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--text);opacity:.4;background:none;border:none;cursor:pointer;">Clear all</button>
-      </div>
-      <div class="card-body" id="acct-recent">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text);opacity:.35;">No recent decodes yet. Paste a METAR or NOTAM in the Decoder to get started.</div>
-      </div>
-    </div>
-
-    <!-- Account actions -->
-    <div class="card">
-      <div class="card-header"><span class="card-title">Account</span></div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
-        <button onclick="authSignOut()" style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--inset);border:1px solid var(--border);border-radius:9px;color:var(--text2);cursor:pointer;font-size:13px;font-family:'Plus Jakarta Sans',sans-serif;transition:all .18s;width:100%;text-align:left;" onmouseover="this.style.borderColor='var(--red)'" onmouseout="this.style.borderColor='var(--border)'">
-          <i data-lucide="log-out" style="width:15px;height:15px;stroke:#f87171;"></i>
-          <div><div style="font-weight:600;color:#f87171;">Sign Out</div><div style="font-size:11px;color:var(--text);opacity:.5;margin-top:1px;">You'll need to sign in again to use AI features</div></div>
-        </button>
-      </div>
-    </div>
-
-  </div>
-</div>
-</div>
 
 </body>
 </html>
