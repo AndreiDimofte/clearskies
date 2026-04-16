@@ -2214,9 +2214,12 @@ async function callAI(messages, maxTokens=800){
   if(!res.ok){
     const e = await res.json().catch(()=>({}));
     if(res.status === 429 && e.code === 'limit_reached'){
-      throw new Error(e.error || 'Daily limit reached. Upgrade for unlimited access.');
+      throw new Error(typeof e.error==='string' ? e.error : 'Daily limit reached. Upgrade for unlimited access.');
     }
-    throw new Error(e.error || `HTTP ${res.status}`);
+    // Anthropic wraps errors as {error:{type,message}} — extract the string
+    const errMsg = typeof e.error==='string' ? e.error
+      : e.error?.message || e.message || `Request failed (${res.status})`;
+    throw new Error(errMsg);
   }
   const data = await res.json();
   return data.content.map(b=>b.text||'').join('\n').trim();
