@@ -72,12 +72,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:var(--nav-bg);bor
 
 /* LANDING */
 .landing{position:relative;z-index:1;}
-.hero-section{min-height:92vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 22px;position:relative;}
+.hero-section{min-height:92vh;display:flex;flex-direction:column;justify-content:center;padding:60px 22px 40px;position:relative;max-width:1060px;margin:0 auto;}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+@media(max-width:860px){.hero-inner{grid-template-columns:1fr;}.hero-demo-card{display:none;}}
 .hero-eyebrow{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.25em;text-transform:uppercase;color:var(--sky);margin-bottom:18px;opacity:0;animation:fadeUp .6s .2s both;}
-.hero-title{font-size:clamp(36px,7vw,78px);font-weight:800;color:var(--text3);line-height:1.04;letter-spacing:-.04em;margin-bottom:20px;opacity:0;animation:fadeUp .7s .35s both;}
+.hero-title{font-size:clamp(42px,6vw,80px);font-weight:800;color:var(--text3);line-height:0.97;letter-spacing:-.05em;margin-bottom:22px;opacity:0;animation:fadeUp .7s .35s both;}
 .hero-title .grad{background:linear-gradient(135deg,var(--sky) 0%,var(--blue) 60%,var(--magenta) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.hero-sub{font-size:clamp(14px,2vw,18px);color:var(--text);max-width:540px;line-height:1.68;margin:0 auto 34px;opacity:0;animation:fadeUp .7s .5s both;}
-.hero-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .7s .65s both;}
+.hero-sub{font-size:17px;color:var(--text);max-width:460px;line-height:1.72;margin:0 0 28px;opacity:0;animation:fadeUp .7s .5s both;}
+.hero-ctas{display:flex;gap:10px;flex-wrap:wrap;opacity:0;animation:fadeUp .7s .65s both;}
 .cta-primary{padding:13px 28px;background:linear-gradient(135deg,#0c3580,#1a6cff);border:none;border-radius:11px;color:#fff;font-size:13px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .2s;box-shadow:0 8px 30px rgba(26,108,255,.35);}
 .cta-primary:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(26,108,255,.45);}
 .cta-secondary{padding:13px 28px;background:var(--surface);border:1px solid var(--border2);border-radius:11px;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;backdrop-filter:blur(10px);}
@@ -85,26 +87,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:var(--nav-bg);bor
 .hero-scroll{position:absolute;bottom:28px;left:0;right:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;opacity:0;animation:fadeUp .7s 1s both;}
 .hero-scroll span{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--text);opacity:.5;}
 .scroll-arrow{width:16px;height:16px;border-right:2px solid var(--text);border-bottom:2px solid var(--text);transform:rotate(45deg);opacity:.3;animation:scrollBounce 1.5s ease infinite;}
-.stats-strip{background:var(--panel-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:26px 22px;}
-.stats-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
+.stats-strip{background:var(--panel-bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:36px 22px;}
+.stats-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
 .stat-item{text-align:center;padding:0 14px;border-right:1px solid var(--border);}
 .stat-item:last-child{border-right:none;}
-.stat-num{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:500;color:var(--sky);line-height:1;margin-bottom:4px;}
-.stat-label{font-size:11.5px;color:var(--text);opacity:.7;}
-.features-section{max-width:960px;margin:0 auto;padding:68px 22px;}
-.section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.25em;text-transform:uppercase;color:var(--sky);margin-bottom:10px;}
-.section-title{font-size:clamp(22px,3.8vw,36px);font-weight:800;color:var(--text3);letter-spacing:-.03em;line-height:1.12;margin-bottom:11px;}
-.section-sub{font-size:14px;color:var(--text);max-width:460px;line-height:1.68;margin-bottom:32px;}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:500;color:var(--sky);line-height:1;margin-bottom:6px;}
+.stat-label{font-size:13px;color:var(--text);opacity:.7;}
+.features-section{max-width:1060px;margin:0 auto;padding:80px 22px;}
+.section-eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--sky);margin-bottom:14px;}
+.section-title{font-size:clamp(32px,4.5vw,52px);font-weight:800;color:var(--text3);letter-spacing:-.04em;line-height:1.06;margin-bottom:14px;}
+.section-sub{font-size:17px;color:var(--text);max-width:540px;line-height:1.72;margin-bottom:36px;}
 .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
-.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:20px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden;}
+.feature-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden;}
 .feature-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,var(--sky-dim),transparent 70%);opacity:0;transition:opacity .3s;}
 .feature-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 13px 32px rgba(0,0,0,.2);}
 .feature-card:hover::before{opacity:1;}
 .feature-icon{font-size:24px;margin-bottom:11px;display:block;}
-.feature-name{font-size:13.5px;font-weight:700;color:var(--text3);margin-bottom:5px;}
-.feature-desc{font-size:12px;color:var(--text);line-height:1.62;}
+.feature-name{font-size:15px;font-weight:700;color:var(--text3);margin-bottom:7px;}
+.feature-desc{font-size:13.5px;color:var(--text);line-height:1.65;}
 .ai-tag{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:100px;background:var(--blue-dim);border:1px solid rgba(26,108,255,.25);color:#60a5fa;}
-.showcase{max-width:960px;margin:0 auto;padding:0 22px 68px;}
+.showcase{max-width:1060px;margin:0 auto;padding:0 22px 68px;}
 .showcase-row{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;margin-bottom:68px;}
 .showcase-row.flip{direction:rtl;}
 .showcase-row.flip>*{direction:ltr;}
@@ -118,10 +120,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;background:var(--nav-bg);bor
 .sv-inst-unit{font-family:'JetBrains Mono',monospace;font-size:6px;color:var(--text);opacity:.4;}
 .sv-section{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:5px;}
 .sv-sec-title{font-family:'JetBrains Mono',monospace;font-size:6px;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);opacity:.7;margin-bottom:3px;}
-.sv-sec-body{font-size:10px;color:var(--text2);line-height:1.6;}
+.sv-sec-body{font-size:12px;color:var(--text2);line-height:1.65;}
 .cta-section{background:linear-gradient(135deg,rgba(26,108,255,.07),rgba(56,189,248,.07));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:68px 22px;}
-.cta-section h2{font-size:clamp(22px,3.8vw,38px);font-weight:800;color:var(--text3);letter-spacing:-.03em;margin-bottom:11px;text-align:inherit;}
-.cta-section p{font-size:14px;color:var(--text);max-width:440px;margin:0 0 28px;line-height:1.68;text-align:inherit;}
+.cta-section h2{font-size:clamp(30px,4vw,48px);font-weight:800;color:var(--text3);letter-spacing:-.04em;margin-bottom:14px;text-align:inherit;}
+.cta-section p{font-size:16px;color:var(--text);max-width:460px;margin:0 0 28px;line-height:1.72;text-align:inherit;}
 
 /* SHARED */
 .page-hero{margin-bottom:26px;padding-top:8px;}
@@ -437,7 +439,7 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
   html,body{background:#fff!important;color:#000!important;}
-  #bgCanvas,nav,.mobile-menu,.decode-btn,.input-topbar,.input-footer,.input-card,.loading-bar,.error-box,.actions-row,.cp-bottom,.site-footer,.tools-grid,.tool-panel,.page-hero,.landing,.stats-strip,.features-section,.showcase,.cta-section,.pricing-grid,.changelog-list,.fetch-bar{display:none!important;}
+  #bgCanvas,nav,.mobile-menu,.decode-btn,.input-topbar,.input-footer,.input-card,.loading-bar,.error-box,.actions-row,.cp-bottom,.site-footer,.tools-grid,.tool-panel,.page-hero,.landing,.stats-strip,.features-section,.showcase,.cta-section,.pricing-grid,.changelog-list,.fetch-bar,.faq-section{display:none!important;}
   .page{display:block!important;padding-top:0!important;}
   .page:not(#page-decoder){display:none!important;}
   #page-decoder{display:block!important;}
@@ -785,11 +787,11 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .nav-signin-btn:hover{background:rgba(56,189,248,.2);border-color:rgba(56,189,248,.5);}
 
 /* ── NEW CTA SECTION ── */
-.cta-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+.cta-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
 @media(max-width:720px){.cta-inner{grid-template-columns:1fr;gap:32px;}}
 .cta-eyebrow{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.25em;text-transform:uppercase;color:var(--sky);margin-bottom:12px;}
-.cta-section h2{font-size:clamp(22px,3vw,32px);font-weight:800;color:var(--text3);letter-spacing:-.03em;margin-bottom:12px;text-align:left;}
-.cta-section p{font-size:14px;color:var(--text);line-height:1.72;margin-bottom:20px;max-width:420px;text-align:left;}
+.cta-section h2{font-size:clamp(30px,4vw,48px);font-weight:800;color:var(--text3);letter-spacing:-.04em;margin-bottom:14px;text-align:left;}
+.cta-section p{font-size:16px;color:var(--text);line-height:1.72;margin-bottom:20px;max-width:440px;text-align:left;}
 .cta-trust{display:flex;flex-direction:column;gap:6px;margin-top:18px;}
 .cta-trust span{display:flex;align-items:center;font-size:12.5px;color:var(--text);opacity:.7;}
 .cta-auth-card{background:var(--panel-bg);border:1px solid var(--border2);border-radius:16px;overflow:hidden;}
@@ -826,6 +828,43 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .acct-plan-name{font-size:15px;font-weight:700;color:var(--text3);margin-bottom:3px;}
 .acct-plan-desc{font-size:12px;color:var(--text);opacity:.6;}
 .acct-limit-note{display:flex;align-items:flex-start;font-size:11.5px;color:var(--text);opacity:.55;padding:8px 12px;background:var(--sky-dim);border:1px solid rgba(56,189,248,.15);border-radius:8px;line-height:1.6;}
+
+/* ── HERO DEMO CARD ── */
+.hero-demo-card{position:relative;background:linear-gradient(180deg,rgba(10,18,34,0.97),rgba(6,12,22,0.97));border:1px solid rgba(56,189,248,0.15);border-radius:18px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04);animation:fadeUp .7s .45s both;}
+.hdc-topbar{padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.02);}
+.hdc-topbar-left{display:flex;align-items:center;gap:8px;}
+.hdc-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);}
+.hdc-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);}
+.hdc-badge{font-family:'JetBrains Mono',monospace;font-size:9px;padding:3px 9px;border-radius:100px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.2);color:var(--sky);}
+.hdc-raw{margin:14px 14px 10px;padding:11px 14px;background:rgba(4,8,18,.7);border:1px solid rgba(255,255,255,.06);border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#7dd3fc;line-height:1.7;word-break:break-all;}
+.hdc-fc{margin:0 14px 12px;padding:8px 13px;background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);border-radius:8px;display:flex;align-items:center;gap:9px;}
+.hdc-fc-badge{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:3px 9px;border-radius:5px;background:rgba(52,211,153,.2);color:var(--green);}
+.hdc-fc-text{font-size:11px;color:var(--text);}
+.hdc-instruments{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.05);margin:0 14px 12px;border-radius:9px;overflow:hidden;}
+.hdc-inst{padding:10px 12px;background:rgba(6,12,24,.85);}
+.hdc-inst-lbl{font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:.15em;text-transform:uppercase;color:var(--text);opacity:.45;margin-bottom:3px;}
+.hdc-inst-val{font-size:14px;font-weight:600;color:var(--sky);letter-spacing:-.02em;}
+.hdc-inst-unit{font-size:8px;color:var(--text);opacity:.35;margin-top:1px;}
+.hdc-section{margin:0 14px 12px;padding:11px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:9px;}
+.hdc-section-lbl{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--sky);opacity:.55;margin-bottom:7px;}
+.hdc-section-body{font-size:12px;line-height:1.7;color:var(--text2);}
+.hdc-footer{margin:0 14px 14px;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--text);opacity:.35;}
+.hdc-status{display:flex;align-items:center;gap:5px;color:var(--green);opacity:.7;}
+.hdc-status::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);}
+.hero-proof{display:flex;align-items:center;gap:12px;margin-top:22px;font-size:12px;color:var(--text);opacity:0;animation:fadeUp .7s .75s both;}
+.hero-proof-avatars{display:flex;}
+.hero-proof-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0c3580,#1a6cff);border:2px solid var(--bg);margin-left:-7px;font-size:10px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;}
+.hero-proof-avatar:first-child{margin-left:0;}
+.hero-proof-stars{color:var(--amber);font-size:12px;letter-spacing:-1px;}
+
+/* ── LANDING FAQ ── */
+.faq-section{max-width:1060px;margin:0 auto;padding:0 22px 80px;}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:40px;}
+@media(max-width:680px){.faq-grid{grid-template-columns:1fr;}}
+.faq-item{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;transition:border-color .2s;}
+.faq-item:hover{border-color:var(--border2);}
+.faq-q{font-size:15px;font-weight:700;color:var(--text3);margin-bottom:10px;letter-spacing:-.01em;line-height:1.4;}
+.faq-a{font-size:13.5px;line-height:1.72;color:var(--text);}
 </style>
 </head>
 <body>
@@ -922,14 +961,54 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 <div class="page active" id="page-home">
 <div class="landing">
   <div class="hero-section">
-    <div class="hero-eyebrow">Aviation Intelligence Platform</div>
-    <h1 class="hero-title">Aviation decoded.<br><span class="grad">Instantly.</span></h1>
-    <p class="hero-sub">Five AI-powered tools for pilots, students, and enthusiasts. Weather briefings, ATC clearances, route planning, ATPL theory — all in one place.</p>
-    <div class="hero-ctas">
-      <button class="cta-primary" id="hero-cta-main" onclick="showAuthOverlay()">Get Started Free →</button>
-      <button class="cta-secondary" onclick="goPage('decoder')">Explore the Decoder</button>
+    <div class="hero-inner">
+      <!-- LEFT — copy -->
+      <div>
+        <div class="hero-eyebrow">Aviation Intelligence Platform</div>
+        <h1 class="hero-title">Aviation<br>briefings,<br><span class="grad">decoded.</span></h1>
+        <p class="hero-sub">METAR, TAF, NOTAM, SIGMET, ATC — plain English in seconds. Route planning, airport dashboards, ATPL theory, and 7 calculators. All in one place.</p>
+        <div class="hero-ctas">
+          <button class="cta-primary" id="hero-cta-main" onclick="showAuthOverlay()">Get Started Free →</button>
+          <button class="cta-secondary" onclick="goPage('decoder')">Try the Decoder</button>
+        </div>
+
+      </div>
+      <!-- RIGHT — live product demo card -->
+      <div class="hero-demo-card">
+        <div class="hdc-topbar">
+          <div class="hdc-topbar-left">
+            <span class="hdc-dot"></span>
+            <span class="hdc-label">Live Decode — METAR</span>
+          </div>
+          <span class="hdc-badge">LRCL · Cluj</span>
+        </div>
+        <div class="hdc-raw">METAR LRCL 111130Z VRB04KT 9999 SCT070 11/M05 Q1017</div>
+        <div class="hdc-fc">
+          <span class="hdc-fc-badge">VFR</span>
+          <span class="hdc-fc-text">Visual Flight Rules · Good flying weather</span>
+        </div>
+        <div class="hdc-instruments">
+          <div class="hdc-inst"><div class="hdc-inst-lbl">Wind</div><div class="hdc-inst-val">VRB/4</div><div class="hdc-inst-unit">kt</div></div>
+          <div class="hdc-inst"><div class="hdc-inst-lbl">Visibility</div><div class="hdc-inst-val">10k+</div><div class="hdc-inst-unit">m</div></div>
+          <div class="hdc-inst"><div class="hdc-inst-lbl">Ceiling</div><div class="hdc-inst-val">SCT070</div><div class="hdc-inst-unit">ft</div></div>
+          <div class="hdc-inst"><div class="hdc-inst-lbl">Temp/Dew</div><div class="hdc-inst-val">11/−5</div><div class="hdc-inst-unit">°C</div></div>
+          <div class="hdc-inst"><div class="hdc-inst-lbl">QNH</div><div class="hdc-inst-val">1017</div><div class="hdc-inst-unit">hPa</div></div>
+          <div class="hdc-inst"><div class="hdc-inst-lbl">Time</div><div class="hdc-inst-val">11:30</div><div class="hdc-inst-unit">UTC</div></div>
+        </div>
+        <div class="hdc-section">
+          <div class="hdc-section-lbl">AI Weather Picture</div>
+          <div class="hdc-section-body">Scattered clouds at 7,000 ft with unlimited visibility. Light variable winds — calm surface conditions. Large temp/dew spread indicates dry air, no precipitation concerns.</div>
+        </div>
+        <div class="hdc-section">
+          <div class="hdc-section-lbl">Pilot Action Required</div>
+          <div class="hdc-section-body">Standard VFR and IFR operations proceeding normally. Monitor for potential morning frost given sub-freezing dewpoint.</div>
+        </div>
+        <div class="hdc-footer">
+          <span>CS-0001</span>
+          <span class="hdc-status">Decoded OK</span>
+        </div>
+      </div>
     </div>
-    <div class="hero-scroll"><span>Scroll to explore</span><div class="scroll-arrow"></div></div>
   </div>
   <div class="stats-strip"><div class="stats-inner">
     <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">AI-powered tools</div></div>
@@ -954,8 +1033,8 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
     <div class="showcase-row reveal">
       <div class="showcase-text">
         <div class="section-eyebrow">Decoder</div>
-        <h2 class="section-title" style="font-size:clamp(19px,2.8vw,28px);">Every value extracted.<br>Nothing left to guess.</h2>
-        <p class="section-sub" style="font-size:13px;margin-bottom:16px;">METARs are parsed into an instrument panel. The AI writes only the narrative — no repeated values, no wrong dates.</p>
+        <h2 class="section-title">Every value extracted.<br>Nothing left to guess.</h2>
+        <p class="section-sub">METARs are parsed into an instrument panel. The AI writes only the narrative — no repeated values, no wrong dates.</p>
         <button class="cta-primary" style="font-size:11.5px;padding:10px 18px;" onclick="goPage('decoder')">Try the Decoder →</button>
       </div>
       <div class="showcase-visual">
@@ -971,15 +1050,50 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
     </div>
     <div class="showcase-row flip reveal">
       <div class="showcase-text">
-        <div class="section-eyebrow">ATPL Q&amp;A</div>
-        <h2 class="section-title" style="font-size:clamp(19px,2.8vw,28px);">Your personal<br>aviation instructor.</h2>
-        <p class="section-sub" style="font-size:13px;margin-bottom:16px;">Ask anything across all 14 ATPL subjects. Structured answers with explanations and memory tips, available 24/7.</p>
-        <button class="cta-primary" style="font-size:11.5px;padding:10px 18px;" onclick="goPage('atpl')">Try ATPL Q&amp;A →</button>
+        <div class="section-eyebrow">Airport Dashboard</div>
+        <h2 class="section-title">Every airport.<br>Fully briefed.</h2>
+        <p class="section-sub">Look up any of 85,000+ airports worldwide. Live METAR auto-fetched, runway analysis with wind components, 3-hour weather trend, sunrise and sunset times.</p>
+        <button class="cta-primary" style="font-size:11.5px;padding:10px 18px;" onclick="goPage('airport')">Try Airport Lookup →</button>
       </div>
       <div class="showcase-visual">
-        <div class="sv-label">What is density altitude and why does it matter?</div>
-        <div class="sv-section"><div class="sv-sec-title">Answer — Performance</div><div class="sv-sec-body">Density altitude is pressure altitude corrected for non-standard temperature. High DA means less dense air — less engine power, less lift, worse performance.</div></div>
-        <div class="sv-section"><div class="sv-sec-title">Memory Tip</div><div class="sv-sec-body" style="color:var(--amber);">Triple H danger: Hot + High + Humid = High density altitude = poor performance.</div></div>
+        <div class="sv-label">LRCL — Avram Iancu Cluj International</div>
+        <div class="sv-inst-row" style="grid-template-columns:repeat(3,1fr);gap:5px;display:grid;margin-bottom:8px;">
+          <div class="sv-inst"><div class="sv-inst-lbl">Wind</div><div class="sv-inst-val">VRB/4</div><div class="sv-inst-unit">kt</div></div>
+          <div class="sv-inst"><div class="sv-inst-lbl">Visibility</div><div class="sv-inst-val">9999</div><div class="sv-inst-unit">m</div></div>
+          <div class="sv-inst"><div class="sv-inst-lbl">QNH</div><div class="sv-inst-val">1017</div><div class="sv-inst-unit">hPa</div></div>
+        </div>
+        <div class="sv-section"><div class="sv-sec-title">Active Runway Recommendation</div><div class="sv-sec-body">With VRB/4kt winds — any runway acceptable. Suggest <strong style="color:var(--sky);">RWY 25</strong> (preferred calm-wind runway). Crosswind component &lt;2kt on all surfaces.</div></div>
+        <div class="sv-section"><div class="sv-sec-title">Sunrise / Sunset (UTC)</div><div class="sv-sec-body" style="display:flex;gap:16px;"><span>🌅 <strong style="color:var(--amber);">04:58</strong> Sunrise</span><span>🌇 <strong style="color:var(--amber);">18:32</strong> Sunset</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="faq-section">
+    <div class="section-eyebrow reveal">FAQ</div>
+    <h2 class="section-title reveal">Questions before take-off.</h2>
+    <div class="faq-grid reveal">
+      <div class="faq-item">
+        <div class="faq-q">Is ClearSkies approved for operational flight use?</div>
+        <div class="faq-a">No. ClearSkies is a planning and educational tool. Always verify with official sources — AIS, ATIS, and ATC — before any flight. AI briefings are advisory only.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need to install anything?</div>
+        <div class="faq-a">Nothing. ClearSkies runs entirely in your browser on any device — iPhone, Android, Mac, or PC. Open theskycrate.com and you're ready to go.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What AI model powers the briefings?</div>
+        <div class="faq-a">ClearSkies uses Claude by Anthropic — one of the most capable AI models available. Your API key never touches the browser; all calls go through a secure proxy.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How accurate is the METAR parsing?</div>
+        <div class="faq-a">The METAR parser handles all standard ICAO formats including SPECI, RMK blocks, runway visual range, and tempo groups. Live data is fetched directly from aviationweather.gov.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I use it for ATPL exam prep?</div>
+        <div class="faq-a">Yes. The ATPL Q&amp;A covers all 14 official EASA subjects with structured explanations, memory tips, and related topic suggestions — available 24/7.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens when I hit the free daily limit?</div>
+        <div class="faq-a">Free accounts get 10 AI decodes per day, resetting at midnight UTC. Calculators, airport lookup, and CSV data remain fully available with no limit at any time.</div>
       </div>
     </div>
   </div>
