@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 [data-theme="dark"]{
@@ -721,9 +722,90 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .icon-md[data-lucide]{width:17px;height:17px;}
 .icon-lg[data-lucide]{width:22px;height:22px;}
 .icon-xl[data-lucide]{width:28px;height:28px;}
+
+/* ── AUTH OVERLAY ── */
+.auth-overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:20px;}
+.auth-overlay.hidden{display:none;}
+.auth-card{width:100%;max-width:400px;background:var(--panel-bg);border:1px solid var(--border2);border-radius:18px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.6);}
+.auth-card-header{padding:28px 28px 0;}
+.auth-logo{display:flex;align-items:center;gap:9px;margin-bottom:22px;}
+.auth-logo-icon{width:34px;height:34px;background:linear-gradient(135deg,#0a2550,#1a6cff);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.auth-logo-icon svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;}
+.auth-logo-name{font-size:18px;font-weight:800;color:var(--text3);letter-spacing:-.04em;}
+.auth-logo-name span{color:var(--sky);}
+.auth-title{font-size:22px;font-weight:800;color:var(--text3);letter-spacing:-.03em;margin-bottom:5px;}
+.auth-sub{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:22px;}
+.auth-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:0 -28px;padding:0 28px;}
+.auth-tab{flex:1;padding:10px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--text);cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;background:none;border-left:none;border-right:none;border-top:none;}
+.auth-tab.active{color:var(--sky);border-bottom-color:var(--sky);}
+.auth-body{padding:24px 28px 28px;}
+.auth-field{margin-bottom:14px;}
+.auth-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--text);opacity:.6;margin-bottom:6px;display:block;}
+.auth-input{width:100%;background:var(--inset);border:1px solid var(--border2);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border-color .18s;}
+.auth-input:focus{border-color:var(--sky);}
+.auth-input::placeholder{color:var(--text);opacity:.3;}
+.auth-submit{width:100%;padding:13px;background:linear-gradient(90deg,#0c3580,#1a6cff);border:none;border-radius:10px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;transition:opacity .18s;letter-spacing:.02em;}
+.auth-submit:hover{opacity:.88;}
+.auth-submit:disabled{opacity:.45;cursor:not-allowed;}
+.auth-error{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;padding:10px 13px;font-size:12px;color:#fca5a5;margin-bottom:14px;display:none;}
+.auth-error.show{display:block;}
+.auth-success{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:8px;padding:10px 13px;font-size:12px;color:#6ee7b7;margin-bottom:14px;display:none;}
+.auth-success.show{display:block;}
+.auth-footer-note{text-align:center;font-size:11px;color:var(--text);opacity:.4;margin-top:16px;line-height:1.6;}
+
+/* ── USER NAV PILL ── */
+.user-pill{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 6px;background:var(--surface);border:1px solid var(--border2);border-radius:100px;cursor:pointer;transition:all .18s;}
+.user-pill:hover{border-color:var(--border2);background:var(--surface2);}
+.user-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0a2550,#1a6cff);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;}
+.user-email{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--panel-bg);border:1px solid var(--border2);border-radius:11px;box-shadow:0 8px 32px rgba(0,0,0,.4);padding:6px;min-width:180px;z-index:500;display:none;}
+.user-dropdown.open{display:block;}
+.user-dropdown-item{padding:8px 12px;border-radius:7px;font-size:12px;color:var(--text2);cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:8px;}
+.user-dropdown-item:hover{background:var(--surface2);}
+.user-dropdown-item.danger{color:#f87171;}
+.user-dropdown-item.danger:hover{background:rgba(248,113,113,.1);}
+.user-nav-wrap{position:relative;}
 </style>
 </head>
 <body>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/><path d="M12 12 L19 5" stroke-width="2"/></svg>
+        </div>
+        <div class="auth-logo-name">Clear<span>Skies</span></div>
+      </div>
+      <div class="auth-title" id="auth-title">Welcome back</div>
+      <div class="auth-sub" id="auth-sub">Sign in to access the full ClearSkies platform.</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin" onclick="authShowTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="authShowTab('signup')">Create Account</button>
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="auth-error" id="auth-error"></div>
+      <div class="auth-success" id="auth-success"></div>
+      <div class="auth-field">
+        <label class="auth-label">Email address</label>
+        <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" id="auth-pass-label">Password</label>
+        <input class="auth-input" id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="auth-field" id="auth-confirm-wrap" style="display:none;">
+        <label class="auth-label">Confirm Password</label>
+        <input class="auth-input" id="auth-confirm" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <button class="auth-submit" id="auth-submit-btn" onclick="authSubmit()">Sign In</button>
+      <div class="auth-footer-note">By signing in you agree to use ClearSkies for planning reference only.<br>Not for operational flight use.</div>
+    </div>
+  </div>
+</div>
 <canvas id="bgCanvas"></canvas>
 
 <!-- NAV -->
@@ -747,6 +829,16 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
     <div class="nav-counter">⚡ <strong id="decode-count">0</strong></div>
     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme"></button>
     <div class="nav-pill"><div class="pulse-dot"></div><span>AI Online</span></div>
+    <div class="user-nav-wrap" id="user-nav-wrap" style="display:none;">
+      <div class="user-pill" onclick="toggleUserDropdown()">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <span class="user-email" id="user-email-nav">—</span>
+      </div>
+      <div class="user-dropdown" id="user-dropdown">
+        <div class="user-dropdown-item" onclick="goPage('pricing');closeUserDropdown()"><i data-lucide="crown" style="width:13px;height:13px;stroke:var(--amber);"></i>Upgrade Plan</div>
+        <div class="user-dropdown-item" onclick="authSignOut()"><i data-lucide="log-out" style="width:13px;height:13px;"></i>Sign Out</div>
+      </div>
+    </div>
     <button class="nav-hamburger" onclick="toggleMobileMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -1628,10 +1720,174 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 /* ══ PROXY ══ */
 const PROXY_URL = 'https://clearskies-proxy.vercel.app/api/proxy';
 
+
+/* ══ SUPABASE AUTH ══ */
+const SUPABASE_URL = 'https://oknphmunldcgwxtmfrrv.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rbnBobXVubGRjZ3d4dG1mcnJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyODY2NzIsImV4cCI6MjA5MTg2MjY3Mn0.aEo3Y_TV5cNLfxUBAzlhYszwM-E5MTrxm2OOpap6v-c';
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let _currentUser = null;
+let _currentSession = null;
+let _authTab = 'signin';
+
+/* ── Show/hide auth overlay ── */
+function showAuthOverlay(){ document.getElementById('auth-overlay').classList.remove('hidden'); }
+function hideAuthOverlay(){ document.getElementById('auth-overlay').classList.add('hidden'); }
+
+/* ── Tab switch ── */
+function authShowTab(tab){
+  _authTab = tab;
+  document.getElementById('tab-signin').classList.toggle('active', tab==='signin');
+  document.getElementById('tab-signup').classList.toggle('active', tab==='signup');
+  document.getElementById('auth-title').textContent = tab==='signin' ? 'Welcome back' : 'Create your account';
+  document.getElementById('auth-sub').textContent = tab==='signin'
+    ? 'Sign in to access the full ClearSkies platform.'
+    : 'Free to join. Your briefings, saved in one place.';
+  document.getElementById('auth-submit-btn').textContent = tab==='signin' ? 'Sign In' : 'Create Account';
+  document.getElementById('auth-confirm-wrap').style.display = tab==='signup' ? '' : 'none';
+  clearAuthMessages();
+}
+
+function clearAuthMessages(){
+  document.getElementById('auth-error').classList.remove('show');
+  document.getElementById('auth-success').classList.remove('show');
+}
+function showAuthError(msg){ const el=document.getElementById('auth-error'); el.textContent=msg; el.classList.add('show'); document.getElementById('auth-success').classList.remove('show'); }
+function showAuthSuccess(msg){ const el=document.getElementById('auth-success'); el.textContent=msg; el.classList.add('show'); document.getElementById('auth-error').classList.remove('show'); }
+
+/* ── Submit handler ── */
+async function authSubmit(){
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const confirm = document.getElementById('auth-confirm').value;
+  const btn = document.getElementById('auth-submit-btn');
+
+  if(!email || !password){ showAuthError('Please enter your email and password.'); return; }
+  if(_authTab==='signup' && password !== confirm){ showAuthError('Passwords do not match.'); return; }
+  if(_authTab==='signup' && password.length < 6){ showAuthError('Password must be at least 6 characters.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = _authTab==='signin' ? 'Signing in…' : 'Creating account…';
+  clearAuthMessages();
+
+  try {
+    if(_authTab === 'signin'){
+      const { data, error } = await _sb.auth.signInWithPassword({ email, password });
+      if(error) throw error;
+      onAuthSuccess(data.session, data.user);
+    } else {
+      const { data, error } = await _sb.auth.signUp({ email, password });
+      if(error) throw error;
+      if(data.session){
+        // Auto-confirmed (email confirmation disabled)
+        onAuthSuccess(data.session, data.user);
+      } else {
+        // Email confirmation required
+        showAuthSuccess('Account created! Check your email to confirm your address, then sign in.');
+        authShowTab('signin');
+      }
+    }
+  } catch(e) {
+    showAuthError(e.message || 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = _authTab==='signin' ? 'Sign In' : 'Create Account';
+  }
+}
+
+/* ── On successful auth ── */
+function onAuthSuccess(session, user){
+  _currentSession = session;
+  _currentUser = user;
+  hideAuthOverlay();
+  updateUserNav(user);
+  if(typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+/* ── Update nav user pill ── */
+function updateUserNav(user){
+  if(!user){ document.getElementById('user-nav-wrap').style.display='none'; return; }
+  document.getElementById('user-nav-wrap').style.display='';
+  document.getElementById('user-email-nav').textContent = user.email;
+  document.getElementById('user-avatar').textContent = user.email[0].toUpperCase();
+}
+
+/* ── Sign out ── */
+async function authSignOut(){
+  await _sb.auth.signOut();
+  _currentUser = null;
+  _currentSession = null;
+  updateUserNav(null);
+  closeUserDropdown();
+  showAuthOverlay();
+  document.getElementById('auth-email').value = '';
+  document.getElementById('auth-password').value = '';
+  document.getElementById('auth-confirm').value = '';
+  clearAuthMessages();
+}
+
+/* ── User dropdown ── */
+function toggleUserDropdown(){
+  document.getElementById('user-dropdown').classList.toggle('open');
+}
+function closeUserDropdown(){
+  document.getElementById('user-dropdown').classList.remove('open');
+}
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('user-nav-wrap');
+  if(wrap && !wrap.contains(e.target)) closeUserDropdown();
+});
+
+/* ── Init auth — check existing session ── */
+async function initAuth(){
+  const { data: { session } } = await _sb.auth.getSession();
+  if(session && session.user){
+    _currentSession = session;
+    _currentUser = session.user;
+    hideAuthOverlay();
+    updateUserNav(session.user);
+  } else {
+    showAuthOverlay();
+  }
+
+  // Listen for auth state changes
+  _sb.auth.onAuthStateChange((event, session) => {
+    if(event === 'SIGNED_IN' && session){
+      _currentSession = session;
+      _currentUser = session.user;
+      hideAuthOverlay();
+      updateUserNav(session.user);
+    } else if(event === 'SIGNED_OUT'){
+      _currentSession = null;
+      _currentUser = null;
+      updateUserNav(null);
+      showAuthOverlay();
+    } else if(event === 'TOKEN_REFRESHED' && session){
+      _currentSession = session;
+    }
+  });
+}
+
+/* ══ AUTHENTICATED PROXY CALL ══ */
+async function callAI(messages, maxTokens=800){
+  if(!_currentSession) throw new Error('Not authenticated');
+  const token = _currentSession.access_token;
+  const res = await fetch(PROXY_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, messages })
+  });
+  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${res.status}`); }
+  const data = await res.json();
+  return data.content.map(b=>b.text||'').join('\n').trim();
+}
+
 /* ══ THEME — auto-detect on first load ══ */
 (function(){
-  const stored = localStorage.getItem('cs_theme');
-  const theme = stored || (window.matchMedia('(prefers-color-scheme:light)').matches ? 'light' : 'dark');
+  const theme = localStorage.getItem('cs_theme') || 'dark';
   document.documentElement.setAttribute('data-theme', theme);
 })();
 
@@ -1965,16 +2221,7 @@ function renderCPSections(containerId,text){
 }
 
 /* ══ SHARED AI CALL ══ */
-async function callAI(messages,maxTokens=800){
-  const res=await fetch(PROXY_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTokens,messages})
-  });
-  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`HTTP ${res.status}`);}
-  const data=await res.json();
-  return data.content.map(b=>b.text||'').join('\n').trim();
-}
+/* callAI defined above in AUTH section */
 
 /* ══ WEATHER DECODER ══ */
 let activeType='auto',lastResultText='',decodeCount=0,recentHistory=[],recentOpen=false;
@@ -1989,11 +2236,14 @@ const EXAMPLES={
 /* Shared METAR fetch — tries direct then CORS proxies */
 async function fetchMetarRaw(icao,hours=1){
   const direct=`https://aviationweather.gov/api/data/metar?ids=${icao}&format=raw&hours=${hours}`;
+  const token=_currentSession?.access_token||'';
   const proxyMetar=`${PROXY_URL}?metar=${icao}&hours=${hours}`;
+  const fetchWithAuth=async(url)=>fetch(url,token&&url.includes(PROXY_URL)?{headers:{'Authorization':`Bearer ${token}`}}:{});
   const sources=[proxyMetar,direct,`https://corsproxy.io/?url=${encodeURIComponent(direct)}`,`https://api.allorigins.win/raw?url=${encodeURIComponent(direct)}`];
   for(const url of sources){
     try{
-      const res=await fetch(url,{signal:AbortSignal.timeout(8000)});
+      const fetcher=url.includes(PROXY_URL)&&typeof fetchWithAuth!=='undefined'?fetchWithAuth:fetch;
+      const res=await fetcher(url,{signal:AbortSignal.timeout(8000)});
       if(!res.ok)continue;
       const text=(await res.text()).trim();
       if(!text)continue;
@@ -2803,6 +3053,44 @@ function exportToPDF(){
     .badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:9px;font-weight:700;}
     .vfr{background:#d1fae5;color:#065f46;}.mvfr{background:#dbeafe;color:#1e40af;}.ifr{background:#fee2e2;color:#991b1b;}.lifr{background:#ede9fe;color:#5b21b6;}
   </style></head><body>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/><path d="M12 12 L19 5" stroke-width="2"/></svg>
+        </div>
+        <div class="auth-logo-name">Clear<span>Skies</span></div>
+      </div>
+      <div class="auth-title" id="auth-title">Welcome back</div>
+      <div class="auth-sub" id="auth-sub">Sign in to access the full ClearSkies platform.</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin" onclick="authShowTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="authShowTab('signup')">Create Account</button>
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="auth-error" id="auth-error"></div>
+      <div class="auth-success" id="auth-success"></div>
+      <div class="auth-field">
+        <label class="auth-label">Email address</label>
+        <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" id="auth-pass-label">Password</label>
+        <input class="auth-input" id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="auth-field" id="auth-confirm-wrap" style="display:none;">
+        <label class="auth-label">Confirm Password</label>
+        <input class="auth-input" id="auth-confirm" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <button class="auth-submit" id="auth-submit-btn" onclick="authSubmit()">Sign In</button>
+      <div class="auth-footer-note">By signing in you agree to use ClearSkies for planning reference only.<br>Not for operational flight use.</div>
+    </div>
+  </div>
+</div>
   <div class="header">
     <div><div class="logo">Clear<span>Skies</span></div><div style="font-size:9px;color:#888;margin-top:3px;">Aviation Intelligence Platform</div></div>
     <div class="meta">Generated ${new Date().toUTCString()}<br>theskycrate.com</div>
@@ -2924,6 +3212,44 @@ function exportDecoderPDF(){
     .cs-footer-logo span{color:#1a6cff;}
   </style>
   </head><body>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="auth-overlay">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/><path d="M12 12 L19 5" stroke-width="2"/></svg>
+        </div>
+        <div class="auth-logo-name">Clear<span>Skies</span></div>
+      </div>
+      <div class="auth-title" id="auth-title">Welcome back</div>
+      <div class="auth-sub" id="auth-sub">Sign in to access the full ClearSkies platform.</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin" onclick="authShowTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="authShowTab('signup')">Create Account</button>
+      </div>
+    </div>
+    <div class="auth-body">
+      <div class="auth-error" id="auth-error"></div>
+      <div class="auth-success" id="auth-success"></div>
+      <div class="auth-field">
+        <label class="auth-label">Email address</label>
+        <input class="auth-input" id="auth-email" type="email" placeholder="you@example.com" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="auth-field">
+        <label class="auth-label" id="auth-pass-label">Password</label>
+        <input class="auth-input" id="auth-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <div class="auth-field" id="auth-confirm-wrap" style="display:none;">
+        <label class="auth-label">Confirm Password</label>
+        <input class="auth-input" id="auth-confirm" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSubmit()">
+      </div>
+      <button class="auth-submit" id="auth-submit-btn" onclick="authSubmit()">Sign In</button>
+      <div class="auth-footer-note">By signing in you agree to use ClearSkies for planning reference only.<br>Not for operational flight use.</div>
+    </div>
+  </div>
+</div>
 
   <div class="cs-header">
     <div class="cs-logo-mark">
@@ -3172,6 +3498,7 @@ document.addEventListener('keydown',e=>{
 updatePerfDefaults();
 updateWBFields();
 renderFavStrips();
+initAuth();
 lucide.createIcons();
 // Load airport DB in background — works when served via local server or GitHub Pages
 loadAirportDB();
