@@ -803,6 +803,29 @@ canvas.wb-chart{width:100%;height:200px;display:block;}
 .cta-auth-success.show{display:block;}
 .cta-auth-note{text-align:center;font-size:10px;color:var(--text);opacity:.35;margin-top:12px;line-height:1.6;}
 .cta-auth-loggedin{background:var(--panel-bg);border:1px solid var(--border2);border-radius:16px;padding:32px;text-align:center;display:flex;flex-direction:column;align-items:center;}
+
+/* ── ACCOUNT DASHBOARD ── */
+.acct-dashboard{display:flex;flex-direction:column;gap:14px;}
+.acct-user-card{background:var(--panel-bg);border:1px solid var(--border2);border-radius:14px;padding:20px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.acct-avatar-lg{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#0a2550,#1a6cff);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;}
+.acct-user-info{flex:1;}
+.acct-email{font-size:15px;font-weight:700;color:var(--text3);margin-bottom:4px;}
+.acct-plan-badge{display:inline-flex;align-items:center;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);background:var(--sky-dim);border:1px solid rgba(56,189,248,.25);border-radius:100px;padding:3px 9px;}
+.acct-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+@media(max-width:560px){.acct-stats{grid-template-columns:1fr;}}
+.acct-stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:12px;align-items:flex-start;}
+.acct-stat-icon{width:36px;height:36px;background:var(--sky-dim);border:1px solid rgba(56,189,248,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.acct-stat-body{flex:1;}
+.acct-stat-label{font-family:'JetBrains Mono',monospace;font-size:7.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--text);opacity:.5;margin-bottom:6px;}
+.acct-stat-val{font-size:26px;font-weight:700;color:var(--text3);letter-spacing:-.02em;line-height:1;}
+.acct-usage-bar-wrap{margin-top:8px;}
+.acct-usage-bar-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.acct-usage-bar-fill{height:100%;background:linear-gradient(90deg,var(--sky),var(--blue));border-radius:2px;transition:width .4s ease;}
+.acct-plan-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.acct-plan-info{flex:1;}
+.acct-plan-name{font-size:15px;font-weight:700;color:var(--text3);margin-bottom:3px;}
+.acct-plan-desc{font-size:12px;color:var(--text);opacity:.6;}
+.acct-limit-note{display:flex;align-items:flex-start;font-size:11.5px;color:var(--text);opacity:.55;padding:8px 12px;background:var(--sky-dim);border:1px solid rgba(56,189,248,.15);border-radius:8px;line-height:1.6;}
 </style>
 </head>
 <body>
@@ -1887,6 +1910,7 @@ function onAuthSuccess(session, user){
   hideAuthOverlay();
   updateUserNav(user);
   syncCtaState();
+  loadUsageFromDB();
   if(typeof lucide !== 'undefined') lucide.createIcons();
 }
 
@@ -1940,6 +1964,7 @@ async function initAuth(){
     hideAuthOverlay();
     updateUserNav(session.user);
     syncCtaState();
+    loadUsageFromDB();
   } else {
     syncCtaState();
   }
@@ -2050,9 +2075,62 @@ async function callAI(messages, maxTokens=800){
     },
     body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:maxTokens, messages })
   });
-  if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(e.error?.message||`HTTP ${res.status}`); }
+
+  // Update usage UI from response headers
+  const used = res.headers.get('X-Decodes-Today');
+  const limit = res.headers.get('X-Decodes-Limit');
+  const plan = res.headers.get('X-Plan');
+  if(used !== null) updateUsageUI(parseInt(used), parseInt(limit), plan);
+
+  if(!res.ok){
+    const e = await res.json().catch(()=>({}));
+    if(res.status === 429 && e.code === 'limit_reached'){
+      throw new Error(e.error || 'Daily limit reached. Upgrade for unlimited access.');
+    }
+    throw new Error(e.error || `HTTP ${res.status}`);
+  }
   const data = await res.json();
   return data.content.map(b=>b.text||'').join('\n').trim();
+}
+
+/* ── Usage UI update ── */
+function updateUsageUI(used, limit, plan){
+  // Update nav counter
+  const counter = document.getElementById('decode-count');
+  if(counter) counter.textContent = used;
+
+  // Update account dashboard if open
+  const usedEl = document.getElementById('acct-used');
+  const limitEl = document.getElementById('acct-limit');
+  const barEl = document.getElementById('acct-usage-bar');
+  if(usedEl) usedEl.textContent = used;
+  if(limitEl) limitEl.textContent = limit > 0 ? limit : '∞';
+  if(barEl && limit > 0) barEl.style.width = Math.min(100, (used/limit)*100) + '%';
+
+  // Store locally
+  localStorage.setItem('cs_decodes_today', used);
+  localStorage.setItem('cs_decodes_limit', limit);
+  localStorage.setItem('cs_plan', plan || 'free');
+}
+
+/* ── Load usage from Supabase on init ── */
+async function loadUsageFromDB(){
+  if(!_currentSession) return;
+  try{
+    const token = _currentSession.access_token;
+    const today = new Date().toISOString().split('T')[0];
+    const r = await fetch('https://oknphmunldcgwxtmfrrv.supabase.co/rest/v1/profiles?id=eq.'+_currentUser.id+'&select=plan,decodes_today,decodes_total,last_decode_date', {
+      headers: { 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rbnBobXVubGRjZ3d4dG1mcnJ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyODY2NzIsImV4cCI6MjA5MTg2MjY3Mn0.aEo3Y_TV5cNLfxUBAzlhYszwM-E5MTrxm2OOpap6v-c', 'Authorization': 'Bearer '+token }
+    });
+    const profiles = await r.json();
+    const p = profiles?.[0];
+    if(p){
+      const used = p.last_decode_date === today ? (p.decodes_today||0) : 0;
+      const limit = p.plan === 'free' ? 10 : -1;
+      updateUsageUI(used, limit, p.plan);
+      localStorage.setItem('cs_decodes_total', p.decodes_total||0);
+    }
+  }catch(e){ console.warn('Usage load failed:', e); }
 }
 
 /* ══ THEME — auto-detect on first load ══ */
@@ -3406,6 +3484,38 @@ function renderAccountPage(){
   document.getElementById('acct-email').textContent=_currentUser.email;
   document.getElementById('acct-avatar').textContent=_currentUser.email[0].toUpperCase();
 
+  // Stats from localStorage (updated by callAI responses)
+  const used=parseInt(localStorage.getItem('cs_decodes_today')||'0');
+  const limit=parseInt(localStorage.getItem('cs_decodes_limit')||'10');
+  const total=parseInt(localStorage.getItem('cs_decodes_total')||'0');
+  const plan=localStorage.getItem('cs_plan')||'free';
+  const favsArr=getFavourites();
+
+  const usedEl=document.getElementById('acct-used');
+  const limitEl=document.getElementById('acct-limit');
+  const barEl=document.getElementById('acct-usage-bar');
+  const totalEl=document.getElementById('acct-total');
+  const favCountEl=document.getElementById('acct-fav-count-stat');
+  const planBadge=document.getElementById('acct-plan-badge');
+  const planName=document.getElementById('acct-plan-name');
+  const planDesc=document.getElementById('acct-plan-desc');
+  const limitNote=document.getElementById('acct-limit-note');
+
+  if(usedEl)usedEl.textContent=used;
+  if(limitEl)limitEl.textContent=limit>0?limit:'∞';
+  if(barEl&&limit>0)barEl.style.width=Math.min(100,(used/limit)*100)+'%';
+  if(totalEl)totalEl.textContent=total.toLocaleString();
+  if(favCountEl)favCountEl.textContent=favsArr.length;
+
+  const planLabels={free:{name:'Free',desc:'10 AI decodes per day · All calculators · Airport lookup',badge:'Free Plan'},pilot:{name:'Pilot',desc:'Unlimited AI decodes · All features',badge:'Pilot Plan'},pro:{name:'Pro',desc:'Everything in Pilot · API access · Priority support',badge:'Pro Plan'}};
+  const pl=planLabels[plan]||planLabels.free;
+  if(planBadge)planBadge.innerHTML=`<i data-lucide="zap" style="width:10px;height:10px;margin-right:4px;"></i>${pl.badge}`;
+  if(planName)planName.textContent=pl.name;
+  if(planDesc)planDesc.textContent=pl.desc;
+  if(limitNote)limitNote.style.display=plan==='free'?'flex':'none';
+
+  lucide.createIcons();
+
   // Favourites
   const favs=getFavourites();
   document.getElementById('acct-fav-count').textContent=favs.length?`${favs.length} saved`:'';
@@ -3729,19 +3839,72 @@ loadAirportDB();
   <!-- Signed in state -->
   <div id="account-main" style="display:none;">
 
-    <!-- User card -->
-    <div class="card" style="margin-bottom:14px;"><div class="card-body">
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#0a2550,#1a6cff);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0;" id="acct-avatar">?</div>
-        <div style="flex:1;">
-          <div style="font-size:16px;font-weight:700;color:var(--text3);margin-bottom:3px;" id="acct-email">—</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text);opacity:.5;" id="acct-plan">Free Plan</div>
+    <!-- Dashboard grid -->
+    <div class="acct-dashboard">
+
+      <!-- User card -->
+      <div class="acct-user-card">
+        <div class="acct-avatar-lg" id="acct-avatar">?</div>
+        <div class="acct-user-info">
+          <div class="acct-email" id="acct-email">—</div>
+          <div class="acct-plan-badge" id="acct-plan-badge">
+            <i data-lucide="zap" style="width:10px;height:10px;margin-right:4px;"></i>Free Plan
+          </div>
         </div>
-        <button class="btn-primary" onclick="goPage('pricing')" style="font-size:11px;padding:8px 16px;">
+        <button class="btn-primary" onclick="goPage('pricing')" style="font-size:11px;padding:8px 16px;white-space:nowrap;">
           <i data-lucide="crown" style="width:12px;height:12px;margin-right:5px;stroke:var(--amber);"></i>Upgrade
         </button>
       </div>
-    </div></div>
+
+      <!-- Stats row -->
+      <div class="acct-stats">
+        <div class="acct-stat-card">
+          <div class="acct-stat-icon"><i data-lucide="zap" style="width:18px;height:18px;stroke:var(--sky);"></i></div>
+          <div class="acct-stat-body">
+            <div class="acct-stat-label">Today's Decodes</div>
+            <div class="acct-stat-val"><span id="acct-used">0</span> <span style="font-size:13px;opacity:.4;">/ <span id="acct-limit">10</span></span></div>
+            <div class="acct-usage-bar-wrap">
+              <div class="acct-usage-bar-track">
+                <div class="acct-usage-bar-fill" id="acct-usage-bar" style="width:0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="acct-stat-card">
+          <div class="acct-stat-icon"><i data-lucide="history" style="width:18px;height:18px;stroke:var(--sky);"></i></div>
+          <div class="acct-stat-body">
+            <div class="acct-stat-label">Total Decodes</div>
+            <div class="acct-stat-val" id="acct-total">0</div>
+          </div>
+        </div>
+        <div class="acct-stat-card">
+          <div class="acct-stat-icon"><i data-lucide="star" style="width:18px;height:18px;stroke:var(--amber);"></i></div>
+          <div class="acct-stat-body">
+            <div class="acct-stat-label">Favourite Airports</div>
+            <div class="acct-stat-val" id="acct-fav-count-stat">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Plan card -->
+      <div class="card" style="margin-bottom:14px;">
+        <div class="card-header"><span class="card-title">Your Plan</span></div>
+        <div class="card-body">
+          <div class="acct-plan-row" id="acct-plan-row">
+            <div class="acct-plan-info">
+              <div class="acct-plan-name" id="acct-plan-name">Free</div>
+              <div class="acct-plan-desc" id="acct-plan-desc">10 AI decodes per day · All calculators · Airport lookup</div>
+            </div>
+            <button class="btn-primary" onclick="goPage('pricing')" style="font-size:11px;padding:8px 18px;">
+              <i data-lucide="arrow-up-right" style="width:12px;height:12px;margin-right:4px;"></i>Upgrade
+            </button>
+          </div>
+          <div class="acct-limit-note" id="acct-limit-note">
+            <i data-lucide="info" style="width:12px;height:12px;margin-right:5px;stroke:var(--sky);flex-shrink:0;"></i>
+            Free accounts reset at midnight UTC. Upgrade to Pilot (€8/mo) for unlimited decodes.
+          </div>
+        </div>
+      </div>
 
     <!-- Favourites -->
     <div class="card" style="margin-bottom:14px;">
